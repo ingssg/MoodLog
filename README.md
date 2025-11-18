@@ -9,32 +9,6 @@
 - **Tailwind CSS**
 - **Supabase** (Postgres + Auth, Google OAuth)
 
-## 시작하기
-
-### 1. 의존성 설치
-
-```bash
-npm install
-```
-
-### 2. 환경 변수 설정
-
-`.env.local` 파일을 생성하고 다음 변수들을 설정하세요:
-
-```env
-NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
-```
-
-### 3. 개발 서버 실행
-
-```bash
-npm run dev
-```
-
-브라우저에서 [http://localhost:3000](http://localhost:3000)을 열어 확인하세요.
-
 ## 프로젝트 구조
 
 ```
@@ -66,10 +40,3 @@ moodLog/
 - ✅ 오늘의 기록 확인
 - ✅ 지난 기록 목록 보기
 - ⏳ AI 코멘트 (더미 데이터로 구현, 추후 OpenAI API 연동 예정)
-
-## 다음 단계
-
-1. Supabase 데이터베이스 스키마 생성
-2. OpenAI API 연동
-3. 반응형 디자인 (모바일)
-4. 다크모드 토글 기능
