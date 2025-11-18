@@ -6,12 +6,13 @@ export default function GoogleLoginButton() {
   const handleLogin = async () => {
     const supabase = createClient();
 
+    // 현재 브라우저의 origin 사용 (Vercel 배포 환경에서도 올바른 URL 사용)
+    const redirectTo = `${window.location.origin}/auth/callback`;
+
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `${
-          process.env.NEXT_PUBLIC_SITE_URL || window.location.origin
-        }/auth/callback`,
+        redirectTo,
         queryParams: {
           access_type: "offline",
           prompt: "consent",
