@@ -36,13 +36,14 @@ export default function GoogleLoginButton() {
     <button
       type="button"
       onClick={handleLogin}
-      className="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-white gap-2 text-base font-bold leading-normal tracking-[0.015em] hover:brightness-105 transition-all shadow-lg shadow-primary/20"
+      className="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-11 sm:h-12 px-4 sm:px-5 bg-primary text-white gap-2 text-sm sm:text-base font-bold leading-normal tracking-[0.015em] hover:brightness-105 transition-all shadow-lg shadow-primary/20"
     >
       <svg
         fill="white"
-        height="24"
+        height="20"
+        width="20"
         viewBox="0 0 24 24"
-        width="24"
+        className="sm:h-6 sm:w-6"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
