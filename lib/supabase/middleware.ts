@@ -11,19 +11,20 @@ export async function updateSession(request: NextRequest) {
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        getAll() {
-          return request.cookies.getAll();
+        async get(name: string) {
+          return request.cookies.get(name)?.value;
         },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
+        async set(
+          name: string,
+          value: string,
+          options?: Parameters<typeof supabaseResponse.cookies.set>[2]
+        ) {
+          request.cookies.set(name, value);
+          supabaseResponse.cookies.set(name, value, options);
+        },
+        async remove(name: string) {
+          request.cookies.delete(name);
+          supabaseResponse.cookies.delete(name);
         },
       },
     }
@@ -37,10 +38,12 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // Allow auth callback and auth routes without user
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/") &&
-    request.nextUrl.pathname !== "/"
+    request.nextUrl.pathname !== "/" &&
+    !request.nextUrl.pathname.startsWith("/auth")
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();
@@ -63,4 +66,3 @@ export async function updateSession(request: NextRequest) {
 
   return supabaseResponse;
 }
-
