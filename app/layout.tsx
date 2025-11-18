@@ -8,6 +8,9 @@ export const metadata: Metadata = {
   title: "MoodLog - 오늘의 감정을 한 줄로 기록해보세요",
   description:
     "기분을 선택하고 한 줄만 적어도 충분해요. AI가 당신의 하루를 따뜻하게 정리해 드립니다.",
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
