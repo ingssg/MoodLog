@@ -1,0 +1,98 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+
+export default function MoodForm() {
+  const [selectedMood, setSelectedMood] = useState<string>("");
+  const [content, setContent] = useState("");
+
+  const moods = [
+    { emoji: "😀", value: "happy" },
+    { emoji: "🙂", value: "neutral" },
+    { emoji: "😢", value: "sad" },
+    { emoji: "😡", value: "angry" },
+    { emoji: "😍", value: "love" },
+  ];
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!selectedMood || !content.trim()) {
+      alert("감정과 내용을 모두 입력해주세요.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("mood", selectedMood);
+    formData.append("content", content);
+
+    const response = await fetch("/api/entries", {
+      method: "POST",
+      body: formData,
+    });
+
+    if (response.ok) {
+      window.location.href = "/home";
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div className="mb-8 flex items-center justify-around">
+        {moods.map((mood) => (
+          <div key={mood.value} className="relative flex flex-col items-center gap-3">
+            <button
+              type="button"
+              onClick={() => setSelectedMood(mood.value)}
+              className={`text-5xl transition-transform duration-200 hover:scale-110 ${
+                selectedMood === mood.value ? "scale-110" : ""
+              }`}
+            >
+              {mood.emoji}
+            </button>
+            {selectedMood === mood.value && (
+              <div className="absolute -bottom-3 h-1.5 w-10 rounded-full bg-primary"></div>
+            )}
+            <input
+              type="radio"
+              name="mood"
+              value={mood.value}
+              checked={selectedMood === mood.value}
+              onChange={() => setSelectedMood(mood.value)}
+              className="hidden"
+            />
+          </div>
+        ))}
+      </div>
+      <div className="mb-8 w-full">
+        <label className="flex flex-col min-w-40 flex-1">
+          <input
+            name="content"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border border-solid border-border-light dark:border-border-dark bg-[#fff5f5] dark:bg-gray-800 p-4 text-base font-normal leading-normal text-text-main-light dark:text-text-main-dark placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            placeholder="오늘의 하루를 한 줄로 기록해보세요…"
+            required
+          />
+        </label>
+      </div>
+      <div className="mb-6 flex justify-center">
+        <button
+          type="submit"
+          className="flex min-w-[84px] w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] shadow-[0_8px_16px_rgba(249,116,49,0.2)] transition-all hover:bg-opacity-90 active:scale-[0.98]"
+        >
+          <span className="truncate">기록하기</span>
+        </button>
+      </div>
+      <div className="flex items-center justify-center">
+        <Link
+          href="/list"
+          className="cursor-pointer text-sm text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary"
+        >
+          <span className="truncate">지난 기록 보기 →</span>
+        </Link>
+      </div>
+    </form>
+  );
+}
+
