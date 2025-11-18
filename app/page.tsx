@@ -24,7 +24,7 @@ export default async function LandingPage({
       <div className="bg-grain fixed inset-0"></div>
       <div className="relative z-10 flex min-h-screen w-full flex-col">
         <div className="flex h-full grow flex-col">
-          <header className="w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 flex items-center justify-between whitespace-nowrap py-4">
+          <header className="w-full max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between whitespace-nowrap py-4">
             <div className="flex items-center gap-4 text-text-primary-light dark:text-text-primary-dark">
               <Logo />
             </div>
@@ -51,8 +51,8 @@ export default async function LandingPage({
                     오늘의 감정을 한 줄로 기록해보세요
                   </h1>
                   <h2 className="text-base md:text-lg font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark max-w-xl mx-auto">
-                    기분을 선택하고 한 줄만 적어도 충분해요. AI가 당신의 하루를 따뜻하게 정리해
-                    드립니다.
+                    기분을 선택하고 한 줄만 적어도 충분해요. AI가 당신의 하루를
+                    따뜻하게 정리해 드립니다.
                   </h2>
                 </div>
                 <div className="flex gap-4 p-3 flex-wrap justify-center">
@@ -113,29 +113,43 @@ export default async function LandingPage({
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   <div className="flex flex-col items-center text-center p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-lg transition-shadow hover:shadow-xl">
                     <div className="flex items-center justify-center h-16 w-16 mb-6 rounded-full bg-primary/10 text-primary">
-                      <span className="material-symbols-outlined !text-4xl">edit_note</span>
+                      <span className="material-symbols-outlined !text-4xl">
+                        edit_note
+                      </span>
                     </div>
-                    <h3 className="text-lg font-bold mb-2">감정 선택 & 한 줄 일기</h3>
+                    <h3 className="text-lg font-bold mb-2">
+                      감정 선택 & 한 줄 일기
+                    </h3>
                     <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
                       그날의 감정을 선택하고, 한 줄만 적으면 기록이 완성됩니다.
                     </p>
                   </div>
                   <div className="flex flex-col items-center text-center p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-lg transition-shadow hover:shadow-xl">
                     <div className="flex items-center justify-center h-16 w-16 mb-6 rounded-full bg-primary/10 text-primary">
-                      <span className="material-symbols-outlined !text-4xl">psychology</span>
+                      <span className="material-symbols-outlined !text-4xl">
+                        psychology
+                      </span>
                     </div>
-                    <h3 className="text-lg font-bold mb-2">AI가 남겨주는 따뜻한 코멘트</h3>
+                    <h3 className="text-lg font-bold mb-2">
+                      AI가 남겨주는 따뜻한 코멘트
+                    </h3>
                     <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                      AI가 당신의 하루를 읽고, 따뜻한 응원과 피드백을 건네줍니다.
+                      AI가 당신의 하루를 읽고, 따뜻한 응원과 피드백을
+                      건네줍니다.
                     </p>
                   </div>
                   <div className="flex flex-col items-center text-center p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-lg transition-shadow hover:shadow-xl">
                     <div className="flex items-center justify-center h-16 w-16 mb-6 rounded-full bg-primary/10 text-primary">
-                      <span className="material-symbols-outlined !text-4xl">auto_stories</span>
+                      <span className="material-symbols-outlined !text-4xl">
+                        auto_stories
+                      </span>
                     </div>
-                    <h3 className="text-lg font-bold mb-2">지난 기록 모아보기</h3>
+                    <h3 className="text-lg font-bold mb-2">
+                      지난 기록 모아보기
+                    </h3>
                     <p className="text-sm text-text-secondary-light dark:text-text-secondary-dark">
-                      지난 기록들을 한눈에 보며 나의 감정 변화를 돌아볼 수 있어요.
+                      지난 기록들을 한눈에 보며 나의 감정 변화를 돌아볼 수
+                      있어요.
                     </p>
                   </div>
                 </div>
@@ -152,4 +166,3 @@ export default async function LandingPage({
     </div>
   );
 }
-

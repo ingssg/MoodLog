@@ -1,4 +1,4 @@
-import Logo from "@/components/Logo";
+import Header from "@/components/Header";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -33,33 +33,9 @@ export default async function ListPage() {
   return (
     <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden bg-background-light dark:bg-background-dark">
       <div className="layout-container flex h-full grow flex-col">
-        <div className="px-4 md:px-10 lg:px-20 xl:px-40 flex flex-1 justify-center py-5">
+        <div className="px-4 sm:px-8 flex flex-1 justify-center py-5">
           <div className="layout-content-container flex flex-col w-full max-w-4xl flex-1">
-            <header className="flex items-center justify-between whitespace-nowrap px-4 md:px-10 py-3 border-b border-solid border-[#F5F1F0] dark:border-white/10">
-              <Logo size="sm" />
-              <div className="flex flex-1 justify-end gap-8">
-                <div className="flex items-center gap-9">
-                  <a
-                    className="text-primary text-sm font-bold leading-normal"
-                    href="/home"
-                  >
-                    Home
-                  </a>
-                  <a
-                    className="text-[#8c6e5f] dark:text-gray-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal"
-                    href="#"
-                  >
-                    Settings
-                  </a>
-                  <a
-                    className="text-[#8c6e5f] dark:text-gray-400 hover:text-primary dark:hover:text-primary text-sm font-medium leading-normal"
-                    href="#"
-                  >
-                    Profile
-                  </a>
-                </div>
-              </div>
-            </header>
+            <Header showNav currentPage="list" />
             <main className="flex flex-col flex-1 py-8 md:py-12 px-4">
               <div className="flex flex-wrap justify-center gap-3 p-4 mb-8">
                 <p className="text-text-primary-light dark:text-text-primary-dark text-4xl font-black leading-tight tracking-[-0.033em] min-w-72 text-center">
