@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-display;
+  }
+}
+
+@layer utilities {
+  .bg-grain::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCrabhPFHrKPtPU8v4rhL1mcG2DeIiro7kw2F0pZ37mjN1Jwo1qTzbl69jjCGJyoS3yeUBc7cVGsTVyGRshMb5-gKXsWX_oCfj9Sr9AsUBRTQ0nvzW8b9BbbxsYc7C2SJgonbA7cuQNx-37L8O8S17QeZsA8Z6aAitt596zFwsN0AzdV6uOoSOv4AEVYttPLNU01I2wkEOGFbcSgr_8d_nPIk9d3liPHVgkVMEKfoF1H1i6ytP8Svx8kXQKDDhAjzKudknDS0K0VruJ");
+    opacity: 0.025;
+    z-index: -1;
+  }
+}
+
