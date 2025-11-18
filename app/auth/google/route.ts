@@ -1,7 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { NextResponse } from "next/server";
 
-export async function POST() {
+async function handleAuth() {
   const supabase = await createClient();
 
   const { data, error } = await supabase.auth.signInWithOAuth({
@@ -16,5 +16,13 @@ export async function POST() {
   }
 
   return NextResponse.redirect(data.url);
+}
+
+export async function GET() {
+  return handleAuth();
+}
+
+export async function POST() {
+  return handleAuth();
 }
 
