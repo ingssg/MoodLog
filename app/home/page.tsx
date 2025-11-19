@@ -1,5 +1,6 @@
 import Header from "@/components/Header";
 import MoodForm from "@/components/MoodForm";
+import EntryCard from "@/components/EntryCard";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -13,27 +14,13 @@ const moodEmojiMap: Record<string, string> = {
   love: "😍",
 };
 
-// 날짜 포맷팅 함수
-function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  const months = [
-    "January",
-    "February",
-    "March",
-    "April",
-    "May",
-    "June",
-    "July",
-    "August",
-    "September",
-    "October",
-    "November",
-    "December",
-  ];
-  return `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-}
+type HomePageProps = {
+  searchParams?: {
+    loading?: string;
+  };
+};
 
-export default async function HomePage() {
+export default async function HomePage({ searchParams }: HomePageProps) {
   const supabase = await createClient();
   const {
     data: { user },
@@ -41,6 +28,24 @@ export default async function HomePage() {
 
   if (!user) {
     redirect("/");
+  }
+  const isLoadingState = searchParams?.loading === "true";
+
+  if (isLoadingState) {
+    return (
+      <div className="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark group/design-root overflow-x-hidden">
+        <div className="layout-container flex h-full grow flex-col">
+          <div className="px-4 sm:px-8 flex flex-1 justify-center py-5">
+            <div className="layout-content-container flex w-full flex-col max-w-4xl flex-1">
+              <Header showNav currentPage="home" />
+              <main className="flex-grow pt-12 pb-8 px-2 sm:px-4 flex items-center justify-center">
+                <LoadingState />
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
   }
 
   // 오늘 날짜
@@ -132,34 +137,13 @@ function EntryDisplay({
         <h2 className="text-lg sm:text-xl font-bold text-primary mb-3 sm:mb-4 px-2 sm:px-4">
           오늘의 일기
         </h2>
-        <div className="flex flex-col items-stretch justify-start rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.1)] bg-card-light dark:bg-card-dark p-4 sm:p-6 md:p-8">
-          <div className="flex w-full flex-col items-stretch justify-center gap-5">
-            <div className="flex items-center justify-between">
-              <p className="text-text-subtle-light dark:text-text-subtle-dark text-xs sm:text-sm font-normal leading-normal">
-                {formatDate(entry.date)}
-              </p>
-              <p className="text-3xl sm:text-4xl">
-                {moodEmojiMap[entry.mood] || "😀"}
-              </p>
-            </div>
-            <div className="flex flex-col gap-3 sm:gap-4 pt-2">
-              <p className="text-sm sm:text-base font-normal leading-relaxed text-text-main-light dark:text-text-main-dark">
-                {entry.content}
-              </p>
-              {entry.ai_comment && (
-                <p className="text-sm sm:text-base font-normal leading-relaxed text-text-subtle-light dark:text-text-subtle-dark border-l-2 border-primary/50 pl-3 sm:pl-4">
-                  {entry.ai_comment}
-                </p>
-              )}
-            </div>
-          </div>
-        </div>
+        <EntryCard entry={entry} />
       </div>
       <div className="mt-6 sm:mt-8">
         <h4 className="text-base sm:text-lg font-bold text-primary mb-3 sm:mb-4 px-2 sm:px-4 md:px-8">
           지난 일주일의 감정 흐름
         </h4>
-        <div className="bg-card-light dark:bg-card-dark rounded-xl shadow-[0_2px_8px_rgba(0,0,0,0.08)] p-2 sm:p-4 mx-2 sm:mx-4 overflow-x-auto">
+        <div className="bg-card-bg dark:bg-card-dark rounded-xl shadow-[0_6px_18px_rgba(180,140,120,0.13)] p-2 sm:p-4 mx-2 sm:mx-4 overflow-x-auto">
           <div className="grid grid-cols-7 gap-1 sm:gap-2 min-w-[280px]">
             {weekDates.map((dayData, index) => {
               const dateParts = dayData.date.split("-");
@@ -212,12 +196,23 @@ function EntryDisplay({
 function NoEntryForm() {
   return (
     <div className="flex flex-1 items-center justify-center px-2 sm:px-4 py-6 sm:py-10">
-      <div className="flex w-full max-w-[680px] flex-col items-stretch justify-start rounded-xl bg-card-light dark:bg-card-dark p-4 sm:p-6 md:p-8 lg:p-12 shadow-[0_16px_32px_rgba(0,0,0,0.1)]">
+      <div className="flex w-full max-w-[680px] flex-col items-stretch justify-start rounded-xl bg-card-bg dark:bg-card-dark p-4 sm:p-6 md:p-8 lg:p-12 shadow-[0_8px_24px_rgba(180,140,120,0.18)]">
         <h1 className="mb-6 sm:mb-8 text-center text-xl sm:text-2xl font-bold text-text-main-light dark:text-text-main-dark">
-          How are you feeling today?
+          오늘 하루 어땠나요?
         </h1>
         <MoodForm />
       </div>
+    </div>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-6 py-12 w-full">
+      <div className="loader-large" />
+      <p className="text-sm sm:text-base text-text-secondary-light dark:text-text-secondary-dark text-center">
+        오늘의 감정을 따뜻하게 정리하고 있어요…
+      </p>
     </div>
   );
 }

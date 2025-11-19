@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import EntryCard from "./EntryCard";
 
 // 감정 값과 이모지 매핑
 const moodEmojiMap: Record<string, string> = {
@@ -41,11 +42,15 @@ interface FilterableEntriesProps {
   entries: Entry[];
 }
 
-export default function FilterableEntries({ entries: initialEntries }: FilterableEntriesProps) {
+export default function FilterableEntries({
+  entries: initialEntries,
+}: FilterableEntriesProps) {
   const [selectedFilter, setSelectedFilter] = useState<string>("전체");
-  const [displayedEntries, setDisplayedEntries] = useState<Entry[]>(initialEntries);
-  const [isLoading, setIsLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(initialEntries.length >= 7);
+  const [displayedEntries, setDisplayedEntries] =
+    useState<Entry[]>(initialEntries);
+  const [isInitialLoading, setIsInitialLoading] = useState(false); // 필터 변경 시 초기 로딩
+  const [isLoadingMore, setIsLoadingMore] = useState(false); // 더보기 버튼 클릭 시 로딩
+  const [hasMore, setHasMore] = useState(true); // 초기에는 항상 버튼 표시
   const [offset, setOffset] = useState(initialEntries.length);
   const isInitialMount = useRef(true);
 
@@ -58,19 +63,21 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
     }
 
     const loadFilteredEntries = async () => {
-      setIsLoading(true);
-      const mood = selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
-      
+      setIsInitialLoading(true);
+      setDisplayedEntries([]); // 필터 변경 시 기존 데이터 초기화
+      const mood =
+        selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
+
       try {
         const response = await fetch(
           `/api/entries?offset=0&limit=7&mood=${mood}`
         );
         const data = await response.json();
-        
+
         if (data.entries) {
           setDisplayedEntries(data.entries);
-          // 7개 미만이면 더 이상 데이터가 없음, 7개면 더 있을 수 있음
-          setHasMore(data.entries.length >= 7);
+          // 필터 변경 시에도 초기에는 버튼을 보여줌
+          setHasMore(true);
           setOffset(data.entries.length);
         } else {
           setHasMore(false);
@@ -78,7 +85,7 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
       } catch (error) {
         console.error("Error loading entries:", error);
       } finally {
-        setIsLoading(false);
+        setIsInitialLoading(false);
       }
     };
 
@@ -86,15 +93,16 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
   }, [selectedFilter]);
 
   const handleLoadMore = async () => {
-    setIsLoading(true);
-    const mood = selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
-    
+    setIsLoadingMore(true);
+    const mood =
+      selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
+
     try {
       const response = await fetch(
         `/api/entries?offset=${offset}&limit=7&mood=${mood}`
       );
       const data = await response.json();
-      
+
       if (data.entries && data.entries.length > 0) {
         setDisplayedEntries((prev) => [...prev, ...data.entries]);
         setHasMore(data.entries.length >= 7);
@@ -106,7 +114,7 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
       console.error("Error loading more entries:", error);
       setHasMore(false);
     } finally {
-      setIsLoading(false);
+      setIsLoadingMore(false);
     }
   };
 
@@ -146,16 +154,14 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
           />
         </div>
       </div>
-      <div className="space-y-4 sm:space-y-6">
-        {isLoading && displayedEntries.length === 0 ? (
+      <div className="space-y-5 sm:space-y-7 md:space-y-8">
+        {isInitialLoading ? (
           <div className="text-center py-8 sm:py-12">
-            <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm sm:text-base">
-              로딩 중...
-            </p>
+            <div className="loader-large mx-auto"></div>
           </div>
         ) : displayedEntries && displayedEntries.length > 0 ? (
           displayedEntries.map((entry) => (
-            <EntryCard key={entry.id} entry={entry} />
+            <EntryCard key={entry.id} entry={entry} variant="compact" />
           ))
         ) : (
           <div className="text-center py-8 sm:py-12">
@@ -165,15 +171,15 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
           </div>
         )}
       </div>
-      {displayedEntries.length > 0 && (
+      {!isInitialLoading && displayedEntries.length > 0 && (
         <div className="flex justify-center mt-8 sm:mt-12">
           {hasMore ? (
             <button
               onClick={handleLoadMore}
-              disabled={isLoading}
-              className="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-xs sm:text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent shadow-sm hover:bg-primary/10 hover:text-primary h-9 sm:h-10 px-6 sm:px-8 py-2 text-text-secondary-light dark:text-text-secondary-dark dark:border-white/20 dark:hover:bg-primary/20 dark:hover:text-white"
+              disabled={isLoadingMore}
+              className="inline-flex items-center justify-center whitespace-nowrap rounded-[18px] text-xs sm:text-sm font-medium transition-all duration-150 ease-in-out focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 border-[1.5px] border-[#D4C1B5] bg-transparent text-[#9B7E6A] hover:bg-[#F4ECE5] h-9 sm:h-10 px-6 sm:px-8 py-2"
             >
-              {isLoading ? "로딩 중..." : "더 보기"}
+              {isLoadingMore ? <div className="loader"></div> : "더 보기"}
             </button>
           ) : (
             <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm sm:text-base">
@@ -198,10 +204,10 @@ function FilterTab({
   return (
     <button
       onClick={onClick}
-      className={`flex flex-col items-center justify-center border-b-[3px] pb-2 sm:pb-[13px] pt-2 sm:pt-4 transition-colors ${
+      className={`flex flex-col items-center justify-center border-b-[3px] pb-2 sm:pb-[13px] pt-2 sm:pt-4 transition-all duration-200 ${
         active
-          ? "border-b-primary text-text-primary-light dark:text-text-primary-dark"
-          : "border-b-transparent text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:border-primary/50"
+          ? "border-b-primary border-opacity-100 opacity-100 text-[#4A3A2A] dark:text-text-primary-dark"
+          : "border-b-transparent opacity-65 hover:opacity-80 text-text-secondary-light dark:text-text-secondary-dark"
       }`}
     >
       <p
@@ -216,32 +222,3 @@ function FilterTab({
     </button>
   );
 }
-
-function EntryCard({ entry }: { entry: Entry }) {
-  return (
-    <div className="p-4 sm:p-6 bg-card-light dark:bg-card-dark rounded-xl shadow-[0_4px_20px_0px_rgba(0,0,0,0.05)]">
-      <div className="flex items-start justify-between gap-3 sm:gap-6">
-        <div className="flex flex-col items-stretch justify-center gap-3 sm:gap-4 w-full min-w-0">
-          <p className="text-text-secondary-light dark:text-text-secondary-dark text-xs sm:text-sm font-normal leading-normal">
-            {formatDate(entry.date)}
-          </p>
-          <p className="text-text-primary-light dark:text-text-primary-dark text-base sm:text-lg font-bold leading-tight tracking-[-0.015em] break-words">
-            {entry.content}
-          </p>
-          {entry.ai_comment && (
-            <>
-              <hr className="border-t-border-light dark:border-white/10 my-2" />
-              <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm sm:text-base font-normal leading-relaxed break-words">
-                {entry.ai_comment}
-              </p>
-            </>
-          )}
-        </div>
-        <p className="text-2xl sm:text-3xl flex-shrink-0">
-          {moodEmojiMap[entry.mood] || "😀"}
-        </p>
-      </div>
-    </div>
-  );
-}
-
