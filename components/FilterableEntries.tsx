@@ -83,7 +83,7 @@ export default function FilterableEntries({
           setHasMore(false);
         }
       } catch (error) {
-        console.error("Error loading entries:", error);
+        // console.error("Error loading entries:", error);
       } finally {
         setIsInitialLoading(false);
       }
@@ -111,7 +111,7 @@ export default function FilterableEntries({
         setHasMore(false);
       }
     } catch (error) {
-      console.error("Error loading more entries:", error);
+      // console.error("Error loading more entries:", error);
       setHasMore(false);
     } finally {
       setIsLoadingMore(false);
