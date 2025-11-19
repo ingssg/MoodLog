@@ -28,30 +28,17 @@ export default async function LandingPage({
             <div className="flex items-center gap-2 sm:gap-4 text-text-primary-light dark:text-text-primary-dark">
               <Logo />
             </div>
-            <div className="hidden sm:flex items-center gap-6 md:gap-9">
-              <a
-                className="text-sm font-medium leading-normal hover:text-primary transition-colors"
-                href="#features"
-              >
-                기능 소개
-              </a>
-              <a
-                className="text-sm font-medium leading-normal hover:text-primary transition-colors"
-                href="#"
-              >
-                문의하기
-              </a>
-            </div>
+            <div className="hidden sm:flex items-center gap-6 md:gap-9"></div>
           </header>
           <main className="flex-grow">
             <section className="text-center py-12 sm:py-20 md:py-24 lg:py-28">
-              <div className="w-full max-w-4xl mx-auto px-4 sm:px-8 md:px-16 lg:px-24 xl:px-40 flex flex-col items-center gap-6 sm:gap-8">
-                <div className="flex flex-col gap-3 sm:gap-4">
+              <div className="w-full max-w-4xl mx-auto px-4  flex flex-col items-center gap-6 sm:gap-8">
+                <div className="flex flex-col gap-3 sm:gap-4 w-full">
                   <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black leading-tight tracking-[-0.033em] px-2">
                     오늘의 감정을 한 줄로 기록해보세요
                   </h1>
-                  <h2 className="text-sm sm:text-base md:text-lg font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark max-w-xl mx-auto px-4">
-                    기분을 선택하고 한 줄만 적어도 충분해요. AI가 당신의 하루를
+                  <h2 className="text-xs sm:text-sm md:text-base lg:text-lg font-normal leading-normal text-text-secondary-light dark:text-text-secondary-dark max-w-[95%] sm:max-w-3xl md:max-w-4xl mx-auto px-2 sm:px-4">
+                    기분을 선택하고 한 줄만 적어도 충분해요. 당신의 하루를
                     따뜻하게 정리해 드립니다.
                   </h2>
                 </div>
@@ -76,13 +63,12 @@ export default async function LandingPage({
                   {errorMessage && (
                     <div className="w-full p-2 sm:p-3 bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700 rounded-lg text-red-700 dark:text-red-300 text-xs sm:text-sm">
                       <p className="font-semibold">로그인 오류</p>
-                      <p className="text-[10px] sm:text-xs mt-1">{errorMessage}</p>
+                      <p className="text-[10px] sm:text-xs mt-1">
+                        {errorMessage}
+                      </p>
                     </div>
                   )}
                   <GoogleLoginButton />
-                  <p className="text-[10px] sm:text-xs text-text-secondary-light dark:text-text-secondary-dark font-normal leading-normal text-center px-2">
-                    계정을 만들 필요 없이, Google 계정으로 간편하게 시작해요.
-                  </p>
                 </div>
                 <a
                   className="text-xs sm:text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark underline decoration-dotted underline-offset-4 hover:text-primary transition-colors px-4"
@@ -102,12 +88,7 @@ export default async function LandingPage({
                   preserveAspectRatio="none"
                   viewBox="0 0 1440 112"
                   xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    className="fill-[#FFF3E8] dark:fill-[rgba(58,42,33,0.5)]"
-                    d="M1440 112C1213.92 112 1076.29 28.1818 720 28.1818C363.712 28.1818 226.085 112 0 112V0H1440V112Z"
-                  />
-                </svg>
+                ></svg>
               </div>
               <div className="relative w-full max-w-5xl mx-auto px-4 sm:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
@@ -158,7 +139,7 @@ export default async function LandingPage({
           </main>
           <footer className="text-center py-8 border-t border-gray-200/80 dark:border-white/10 mt-16 z-10 bg-transparent">
             <p className="text-xs text-text-secondary-light dark:text-text-secondary-dark">
-              © MoodLog | 개인 프로젝트용 데모 서비스입니다.
+              © MoodLog | 하루 한 줄, AI 코멘트
             </p>
           </footer>
         </div>
