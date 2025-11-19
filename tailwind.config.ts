@@ -11,8 +11,9 @@ const config: Config = {
     extend: {
       colors: {
         primary: "#f9722f",
-        "background-light": "#FFFAF7",
+        "background-light": "#FFF8F3",
         "background-dark": "#23160f",
+        "card-bg": "#EBD6C3",
         "card-light": "#FFF3EC",
         "card-dark": "#3a2a21",
         "text-primary-light": "#333333",
@@ -47,4 +48,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-
