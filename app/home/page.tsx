@@ -143,7 +143,7 @@ function EntryDisplay({
         <h4 className="text-base sm:text-lg font-bold text-primary mb-3 sm:mb-4 px-2 sm:px-4 md:px-8">
           지난 일주일의 감정 흐름
         </h4>
-        <div className="bg-card-bg dark:bg-card-dark rounded-xl shadow-[0_6px_18px_rgba(180,140,120,0.13)] p-2 sm:p-4 mx-2 sm:mx-4 overflow-x-auto">
+        <div className="bg-card-bg dark:bg-card-dark rounded-xl shadow-[0_4px_12px_rgba(180,140,120,0.15),0_2px_4px_rgba(180,140,120,0.1)] p-2 sm:p-4 mx-2 sm:mx-4 overflow-x-auto">
           <div className="grid grid-cols-7 gap-1 sm:gap-2 min-w-[280px]">
             {weekDates.map((dayData, index) => {
               const dateParts = dayData.date.split("-");
@@ -196,7 +196,7 @@ function EntryDisplay({
 function NoEntryForm() {
   return (
     <div className="flex flex-1 items-center justify-center px-2 sm:px-4 py-6 sm:py-10">
-      <div className="flex w-full max-w-[680px] flex-col items-stretch justify-start rounded-xl bg-card-bg dark:bg-card-dark p-4 sm:p-6 md:p-8 lg:p-12 shadow-[0_8px_24px_rgba(180,140,120,0.18)]">
+      <div className="flex w-full max-w-[680px] flex-col items-stretch justify-start rounded-xl bg-card-bg dark:bg-card-dark p-4 sm:p-6 md:p-8 lg:p-12 shadow-[0_8px_24px_rgba(180,140,120,0.2),0_4px_8px_rgba(180,140,120,0.15)]">
         <h1 className="mb-6 sm:mb-8 text-center text-xl sm:text-2xl font-bold text-text-main-light dark:text-text-main-dark">
           오늘 하루 어땠나요?
         </h1>
