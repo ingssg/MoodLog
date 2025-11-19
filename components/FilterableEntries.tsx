@@ -44,10 +44,8 @@ interface FilterableEntriesProps {
 export default function FilterableEntries({ entries: initialEntries }: FilterableEntriesProps) {
   const [selectedFilter, setSelectedFilter] = useState<string>("전체");
   const [displayedEntries, setDisplayedEntries] = useState<Entry[]>(initialEntries);
-  const [isInitialLoading, setIsInitialLoading] = useState(false); // 필터 변경 시 초기 로딩
-  const [isLoadingMore, setIsLoadingMore] = useState(false); // 더보기 버튼 클릭 시 로딩
-  // 초기에는 항상 버튼을 보여주기 위해 true로 시작 (버튼을 눌렀을 때만 false가 될 수 있음)
-  const [hasMore, setHasMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasMore, setHasMore] = useState(initialEntries.length >= 7);
   const [offset, setOffset] = useState(initialEntries.length);
   const isInitialMount = useRef(true);
 
@@ -60,8 +58,7 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
     }
 
     const loadFilteredEntries = async () => {
-      setIsInitialLoading(true);
-      setDisplayedEntries([]); // 필터 변경 시 기존 데이터 초기화
+      setIsLoading(true);
       const mood = selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
       
       try {
@@ -72,17 +69,16 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
         
         if (data.entries) {
           setDisplayedEntries(data.entries);
-          // 필터 변경 시에도 초기에는 버튼을 보여줌 (7개 미만이어도 버튼을 눌러봐야 알 수 있음)
-          setHasMore(true);
+          // 7개 미만이면 더 이상 데이터가 없음, 7개면 더 있을 수 있음
+          setHasMore(data.entries.length >= 7);
           setOffset(data.entries.length);
         } else {
-          // 데이터가 없으면 바로 false
           setHasMore(false);
         }
       } catch (error) {
         console.error("Error loading entries:", error);
       } finally {
-        setIsInitialLoading(false);
+        setIsLoading(false);
       }
     };
 
@@ -90,7 +86,7 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
   }, [selectedFilter]);
 
   const handleLoadMore = async () => {
-    setIsLoadingMore(true);
+    setIsLoading(true);
     const mood = selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
     
     try {
@@ -110,7 +106,7 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
       console.error("Error loading more entries:", error);
       setHasMore(false);
     } finally {
-      setIsLoadingMore(false);
+      setIsLoading(false);
     }
   };
 
@@ -151,9 +147,11 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
         </div>
       </div>
       <div className="space-y-4 sm:space-y-6">
-        {isInitialLoading ? (
+        {isLoading && displayedEntries.length === 0 ? (
           <div className="text-center py-8 sm:py-12">
-            <div className="loader-large mx-auto"></div>
+            <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm sm:text-base">
+              로딩 중...
+            </p>
           </div>
         ) : displayedEntries && displayedEntries.length > 0 ? (
           displayedEntries.map((entry) => (
@@ -167,15 +165,15 @@ export default function FilterableEntries({ entries: initialEntries }: Filterabl
           </div>
         )}
       </div>
-      {!isInitialLoading && displayedEntries.length > 0 && (
+      {displayedEntries.length > 0 && (
         <div className="flex justify-center mt-8 sm:mt-12">
           {hasMore ? (
             <button
               onClick={handleLoadMore}
-              disabled={isLoadingMore}
+              disabled={isLoading}
               className="inline-flex items-center justify-center whitespace-nowrap rounded-lg text-xs sm:text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 border border-input bg-transparent shadow-sm hover:bg-primary/10 hover:text-primary h-9 sm:h-10 px-6 sm:px-8 py-2 text-text-secondary-light dark:text-text-secondary-dark dark:border-white/20 dark:hover:bg-primary/20 dark:hover:text-white"
             >
-              {isLoadingMore ? <div className="loader"></div> : "더 보기"}
+              {isLoading ? "로딩 중..." : "더 보기"}
             </button>
           ) : (
             <p className="text-text-secondary-light dark:text-text-secondary-dark text-sm sm:text-base">

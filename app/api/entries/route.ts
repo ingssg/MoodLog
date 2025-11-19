@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { generateAiComment } from "@/lib/openai";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -52,7 +53,7 @@ export async function POST(request: Request) {
   }
 
   const formData = await request.formData();
-  const content = formData.get("content") as string;
+  const content = (formData.get("content") as string)?.trim();
   const mood = formData.get("mood") as string;
 
   if (!content || !mood) {
@@ -73,6 +74,8 @@ export async function POST(request: Request) {
     .eq("date", today)
     .single();
 
+  const aiComment = await generateAiComment(content, mood);
+
   let error;
 
   if (existingEntry) {
@@ -80,9 +83,9 @@ export async function POST(request: Request) {
     const { error: updateError } = await supabase
       .from("entries")
       .update({
-        content: content.trim(),
+        content,
         mood,
-        ai_comment: `AI 코멘트: ${content.trim()}에 대한 따뜻한 응원의 메시지입니다.`, // 임시 더미 데이터
+        ai_comment: aiComment,
       })
       .eq("id", existingEntry.id);
 
@@ -93,10 +96,10 @@ export async function POST(request: Request) {
       .from("entries")
       .insert({
         user_id: user.id,
-        content: content.trim(),
+        content,
         mood,
         date: today,
-        ai_comment: `AI 코멘트: ${content.trim()}에 대한 따뜻한 응원의 메시지입니다.`, // 임시 더미 데이터
+        ai_comment: aiComment,
       });
 
     error = insertError;
