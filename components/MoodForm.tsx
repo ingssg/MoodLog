@@ -94,7 +94,7 @@ export default function MoodForm() {
             name="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border border-solid border-border-light dark:border-border-dark bg-white dark:bg-gray-800 p-3 sm:p-4 text-sm sm:text-base font-normal leading-normal text-text-main-light dark:text-text-main-dark placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border border-solid border-border-light dark:border-border-dark bg-white dark:bg-gray-800 p-3 sm:p-4 text-sm sm:text-base font-normal leading-normal text-text-main-light dark:text-text-main-dark placeholder:text-text-secondary-light dark:placeholder:text-text-secondary-dark focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shadow-[0_2px_4px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)] focus:shadow-[0_4px_8px_rgba(249,116,49,0.12),0_2px_4px_rgba(249,116,49,0.08)] transition-shadow"
             placeholder="오늘의 하루를 한 줄로 기록해보세요"
             required
           />
@@ -104,7 +104,7 @@ export default function MoodForm() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="flex min-w-[84px] w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-11 sm:h-12 px-4 sm:px-5 bg-primary text-white text-sm sm:text-base font-bold leading-normal tracking-[0.015em] shadow-[0_8px_16px_rgba(249,116,49,0.2)] transition-all hover:bg-opacity-90 active:scale-[0.98]"
+          className="flex min-w-[84px] w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-11 sm:h-12 px-4 sm:px-5 bg-primary text-white text-sm sm:text-base font-bold leading-normal tracking-[0.015em] shadow-[0_6px_12px_rgba(249,116,49,0.25),0_3px_6px_rgba(249,116,49,0.15)] transition-all hover:bg-opacity-90 hover:shadow-[0_8px_16px_rgba(249,116,49,0.3),0_4px_8px_rgba(249,116,49,0.2)] active:scale-[0.98] active:shadow-[0_4px_8px_rgba(249,116,49,0.2),0_2px_4px_rgba(249,116,49,0.12)]"
         >
           <span className="truncate">기록하기</span>
         </button>
