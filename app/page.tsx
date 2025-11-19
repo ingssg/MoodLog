@@ -43,19 +43,19 @@ export default async function LandingPage({
                   </h2>
                 </div>
                 <div className="flex gap-2 sm:gap-4 p-2 sm:p-3 flex-wrap justify-center">
-                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-[0_6px_12px_rgba(0,0,0,0.18),0_3px_6px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.22),0_4px_8px_rgba(0,0,0,0.15)] transition-shadow">
                     <p className="text-xl sm:text-2xl">😀</p>
                   </div>
-                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-[0_6px_12px_rgba(0,0,0,0.18),0_3px_6px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.22),0_4px_8px_rgba(0,0,0,0.15)] transition-shadow">
                     <p className="text-xl sm:text-2xl">🙂</p>
                   </div>
-                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-[0_6px_12px_rgba(0,0,0,0.18),0_3px_6px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.22),0_4px_8px_rgba(0,0,0,0.15)] transition-shadow">
                     <p className="text-xl sm:text-2xl">😢</p>
                   </div>
-                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-[0_6px_12px_rgba(0,0,0,0.18),0_3px_6px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.22),0_4px_8px_rgba(0,0,0,0.15)] transition-shadow">
                     <p className="text-xl sm:text-2xl">😡</p>
                   </div>
-                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-md hover:shadow-lg transition-shadow">
+                  <div className="flex h-10 w-10 sm:h-12 sm:w-12 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-card-dark shadow-[0_6px_12px_rgba(0,0,0,0.18),0_3px_6px_rgba(0,0,0,0.12)] hover:shadow-[0_8px_16px_rgba(0,0,0,0.22),0_4px_8px_rgba(0,0,0,0.15)] transition-shadow">
                     <p className="text-xl sm:text-2xl">🥰</p>
                   </div>
                 </div>
@@ -92,7 +92,7 @@ export default async function LandingPage({
               </div>
               <div className="relative w-full max-w-5xl mx-auto px-4 sm:px-8">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-                  <div className="flex flex-col items-center text-center p-6 sm:p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-lg transition-shadow hover:shadow-xl">
+                  <div className="flex flex-col items-center text-center p-6 sm:p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-[0_10px_24px_rgba(0,0,0,0.18),0_5px_10px_rgba(0,0,0,0.12)] transition-shadow hover:shadow-[0_14px_32px_rgba(0,0,0,0.22),0_7px_14px_rgba(0,0,0,0.15)]">
                     <div className="flex items-center justify-center h-12 w-12 sm:h-16 sm:w-16 mb-4 sm:mb-6 rounded-full bg-primary/10 text-primary">
                       <span className="material-symbols-outlined !text-3xl sm:!text-4xl">
                         edit_note
@@ -105,7 +105,7 @@ export default async function LandingPage({
                       그날의 감정을 선택하고, 한 줄만 적으면 기록이 완성됩니다.
                     </p>
                   </div>
-                  <div className="flex flex-col items-center text-center p-6 sm:p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-lg transition-shadow hover:shadow-xl">
+                  <div className="flex flex-col items-center text-center p-6 sm:p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-[0_10px_24px_rgba(0,0,0,0.18),0_5px_10px_rgba(0,0,0,0.12)] transition-shadow hover:shadow-[0_14px_32px_rgba(0,0,0,0.22),0_7px_14px_rgba(0,0,0,0.15)]">
                     <div className="flex items-center justify-center h-12 w-12 sm:h-16 sm:w-16 mb-4 sm:mb-6 rounded-full bg-primary/10 text-primary">
                       <span className="material-symbols-outlined !text-3xl sm:!text-4xl">
                         psychology
@@ -119,7 +119,7 @@ export default async function LandingPage({
                       건네줍니다.
                     </p>
                   </div>
-                  <div className="flex flex-col items-center text-center p-6 sm:p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-lg transition-shadow hover:shadow-xl">
+                  <div className="flex flex-col items-center text-center p-6 sm:p-8 bg-white/70 dark:bg-card-dark rounded-xl shadow-[0_10px_24px_rgba(0,0,0,0.18),0_5px_10px_rgba(0,0,0,0.12)] transition-shadow hover:shadow-[0_14px_32px_rgba(0,0,0,0.22),0_7px_14px_rgba(0,0,0,0.15)]">
                     <div className="flex items-center justify-center h-12 w-12 sm:h-16 sm:w-16 mb-4 sm:mb-6 rounded-full bg-primary/10 text-primary">
                       <span className="material-symbols-outlined !text-3xl sm:!text-4xl">
                         auto_stories
