@@ -41,8 +41,8 @@ export default function EntryCard({
         isCompact ? "p-4 sm:p-6" : "p-4 sm:p-6 md:p-8"
       } bg-card-bg dark:bg-card-dark rounded-xl ${
         isCompact
-          ? "shadow-[0_6px_18px_rgba(180,140,120,0.13)]"
-          : "shadow-[0_6px_18px_rgba(180,140,120,0.13)]"
+          ? "shadow-[0_8px_20px_rgba(180,140,120,0.25),0_4px_8px_rgba(180,140,120,0.2)]"
+          : "shadow-[0_10px_28px_rgba(180,140,120,0.28),0_5px_10px_rgba(180,140,120,0.22)]"
       }`}
     >
       <div className="flex items-start justify-between gap-3 sm:gap-6">
