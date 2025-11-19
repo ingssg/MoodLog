@@ -21,7 +21,7 @@ export default function GoogleLoginButton() {
     });
 
     if (error) {
-      console.error("OAuth error:", error);
+      // console.error("OAuth error:", error);
       window.location.href = `/?error=auth_failed&message=${encodeURIComponent(
         error.message
       )}`;

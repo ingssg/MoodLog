@@ -22,7 +22,7 @@ export default async function ListPage() {
     .limit(7);
 
   if (error) {
-    console.error("Error fetching entries:", error);
+    // console.error("Error fetching entries:", error);
   }
 
   return (

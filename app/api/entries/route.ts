@@ -32,11 +32,8 @@ export async function GET(request: Request) {
   const { data: entries, error } = await query;
 
   if (error) {
-    console.error("Error fetching entries:", error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    // console.error("Error fetching entries:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   return NextResponse.json({ entries: entries || [] });
@@ -92,27 +89,21 @@ export async function POST(request: Request) {
     error = updateError;
   } else {
     // 오늘의 일기가 없으면 새로 생성
-    const { error: insertError } = await supabase
-      .from("entries")
-      .insert({
-        user_id: user.id,
-        content,
-        mood,
-        date: today,
-        ai_comment: aiComment,
-      });
+    const { error: insertError } = await supabase.from("entries").insert({
+      user_id: user.id,
+      content,
+      mood,
+      date: today,
+      ai_comment: aiComment,
+    });
 
     error = insertError;
   }
 
   if (error) {
-    console.error("Error saving entry:", error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    // console.error("Error saving entry:", error);
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   return NextResponse.json({ success: true });
 }
-
