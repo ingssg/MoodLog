@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { generateAiComment } from "@/lib/openai";
 import { NextResponse } from "next/server";
+import { getKSTDateString } from "@/lib/utils";
 
 export async function GET(request: Request) {
   const supabase = await createClient();
@@ -60,8 +61,8 @@ export async function POST(request: Request) {
     );
   }
 
-  // 오늘 날짜 (YYYY-MM-DD 형식)
-  const today = new Date().toISOString().split("T")[0];
+  // 오늘 날짜 (한국 시간 기준, YYYY-MM-DD 형식)
+  const today = getKSTDateString();
 
   // 먼저 오늘의 일기가 있는지 확인
   const { data: existingEntry } = await supabase
