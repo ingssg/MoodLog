@@ -4,6 +4,7 @@ import EntryCard from "@/components/EntryCard";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getKSTDateString, getKSTDateStringDaysAgo } from "@/lib/utils";
 
 // 감정 값과 이모지 매핑
 const moodEmojiMap: Record<string, string> = {
@@ -48,8 +49,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     );
   }
 
-  // 오늘 날짜
-  const today = new Date().toISOString().split("T")[0];
+  // 오늘 날짜 (한국 시간 기준)
+  const today = getKSTDateString();
 
   // 오늘의 일기 가져오기
   const { data: todayEntry, error } = await supabase
@@ -61,10 +62,8 @@ export default async function HomePage({ searchParams }: HomePageProps) {
 
   const hasEntryToday = !!todayEntry && !error;
 
-  // 지난 1주일간의 일기 가져오기 (감정 트렌드용)
-  const oneWeekAgo = new Date();
-  oneWeekAgo.setDate(oneWeekAgo.getDate() - 6); // 오늘 포함 7일
-  const oneWeekAgoStr = oneWeekAgo.toISOString().split("T")[0];
+  // 지난 1주일간의 일기 가져오기 (감정 트렌드용, 한국 시간 기준)
+  const oneWeekAgoStr = getKSTDateStringDaysAgo(6); // 오늘 포함 7일
 
   const { data: recentEntries } = await supabase
     .from("entries")
@@ -104,15 +103,13 @@ function EntryDisplay({
   entry: any;
   recentEntries: any[];
 }) {
-  // 지난 1주일 날짜 배열 생성 (일~토)
+  // 지난 1주일 날짜 배열 생성 (일~토, 한국 시간 기준)
   const getLastWeekDates = () => {
     const dates: Array<{ date: string; dayName: string; mood?: string }> = [];
-    const today = new Date();
 
     for (let i = 6; i >= 0; i--) {
-      const date = new Date(today);
-      date.setDate(date.getDate() - i);
-      const dateStr = date.toISOString().split("T")[0];
+      const dateStr = getKSTDateStringDaysAgo(6 - i);
+      const date = new Date(dateStr + "T00:00:00+09:00"); // KST 기준으로 Date 객체 생성
       const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
       const dayName = dayNames[date.getDay()];
 
