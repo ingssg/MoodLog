@@ -71,6 +71,7 @@ export default function Header({ showNav = false, currentPage }: HeaderProps) {
   const handleNavigation = (path: string) => {
     setIsDropdownOpen(false);
     router.push(path);
+    router.refresh(); // 서버 컴포넌트 캐시 무시하고 새로고침
   };
 
   return (
@@ -81,19 +82,25 @@ export default function Header({ showNav = false, currentPage }: HeaderProps) {
           {/* 데스크탑 네비게이션 */}
           <nav className="hidden sm:flex items-center gap-6 md:gap-9">
             {currentPage === "home" ? (
-              <Link
+              <button
+                onClick={() => {
+                  router.push("/list");
+                  router.refresh();
+                }}
                 className="text-text-main-light/70 dark:text-text-main-dark/70 hover:text-primary dark:hover:text-primary text-xs sm:text-sm font-medium leading-normal"
-                href="/list"
               >
                 List
-              </Link>
+              </button>
             ) : (
-              <Link
+              <button
+                onClick={() => {
+                  router.push("/home");
+                  router.refresh();
+                }}
                 className="text-text-main-light/70 dark:text-text-main-dark/70 hover:text-primary dark:hover:text-primary text-xs sm:text-sm font-medium leading-normal"
-                href="/home"
               >
                 Home
-              </Link>
+              </button>
             )}
             <button
               onClick={handleLogout}

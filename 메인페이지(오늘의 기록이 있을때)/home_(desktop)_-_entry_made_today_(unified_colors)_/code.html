@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="light" lang="ko"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MoodLog - Daily Summary</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#f9722f",
+            "background-light": "#FFFAF7",
+            "background-dark": "#1a1a1a",
+            "card-light": "#FFF3EC",
+            "card-dark": "#2c2c2c",
+            "text-main-light": "#4A4A4A",
+            "text-main-dark": "#e0dcd9",
+            "text-subtle-light": "#D98B6F",
+            "text-subtle-dark": "#b88a79",
+            "border-light": "#f5f1f0",
+            "border-dark": "#3f2b20",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {"DEFAULT": "0.5rem", "lg": "1rem", "xl": "1.5rem", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5 px-4 sm:px-8">
+<div class="layout-content-container flex w-full flex-col max-w-[700px] flex-1">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-border-light dark:border-border-dark px-6 sm:px-10 py-4">
+<div class="flex items-center gap-4">
+<div class="size-6 text-primary">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold leading-tight tracking-[-0.015em] text-text-main-light dark:text-text-main-dark">MoodLog</h2>
+</div>
+<div class="flex flex-1 justify-end items-center gap-4 sm:gap-8">
+<nav class="hidden sm:flex items-center gap-9">
+<a class="text-primary text-sm font-bold leading-normal" href="#">Home</a>
+<a class="text-text-main-light/70 dark:text-text-main-dark/70 hover:text-text-main-light dark:hover:text-text-main-dark text-sm font-medium leading-normal" href="#">Settings</a>
+<a class="text-text-main-light/70 dark:text-text-main-dark/70 hover:text-text-main-light dark:hover:text-text-main-dark text-sm font-medium leading-normal" href="#">Profile</a>
+</nav>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User's profile picture" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDIN_1bN0fsW8-5YfznkBDKCx8AqxMxtdI6f7p-p44mCeCoqQRH_BJGS8Z-2PcwEkaK1094mZEJS7IBPcC0xejlo9LPvSVCa4-NFrWkM51Jd2RiheYwX8ZXudMfk_zTxJpczhjHV_HmZe4OCl0De4k4sjV96WxzXhkoz9GCqq-tX3iCkGqnYPgO36Op0XR-s2-gZlTTJeh9Ui0Lak1-nFgASgkMUH5WLdeIlY4QgLWOkr0Bvu6oige6H-Dj-S6P-83DPRSMxsrPblMd");'></div>
+</div>
+</header>
+<main class="flex-grow pt-12 pb-8 px-2 sm:px-4">
+<div class="p-4 @container">
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.1)] bg-card-light dark:bg-card-dark p-6 sm:p-8">
+<div class="flex w-full flex-col items-stretch justify-center gap-5">
+<div class="flex items-center justify-between">
+<p class="text-text-subtle-light dark:text-text-subtle-dark text-sm font-normal leading-normal">24 October 2023</p>
+<p class="text-4xl">😀</p>
+</div>
+<div class="flex flex-col gap-4 pt-2">
+<p class="text-base font-normal leading-relaxed text-text-main-light dark:text-text-main-dark">
+                      오늘 정말 기분 좋은 하루였다. 아침에 일어나서 상쾌한 공기를 마시니 저절로 미소가 지어졌다. 하루 종일 긍정적인 생각만 가득했다.
+                    </p>
+<p class="text-base font-normal leading-relaxed text-text-subtle-light dark:text-text-subtle-dark border-l-2 border-primary/50 pl-4">
+                      AI Comment: 정말 기분 좋은 하루를 보내셨군요! 긍정적인 시작이 하루 전체에 좋은 영향을 미친 것 같아요. 내일도 오늘처럼 행복한 하루가 되기를 바랍니다.
+                    </p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<h4 class="text-text-subtle-light dark:text-text-subtle-dark text-sm font-bold leading-normal tracking-[0.015em] px-4 py-2 text-center">Recent Mood Trends</h4>
+<div class="grid grid-cols-5 gap-3 p-4">
+<div class="flex flex-col items-center justify-center text-center bg-card-light dark:bg-card-dark rounded-lg p-3 aspect-square shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+<span class="text-3xl">😀</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center bg-card-light dark:bg-card-dark rounded-lg p-3 aspect-square shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+<span class="text-3xl">🙂</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center bg-card-light dark:bg-card-dark rounded-lg p-3 aspect-square shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+<span class="text-3xl">😢</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center bg-card-light dark:bg-card-dark rounded-lg p-3 aspect-square shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+<span class="text-3xl">😡</span>
+</div>
+<div class="flex flex-col items-center justify-center text-center bg-card-light dark:bg-card-dark rounded-lg p-3 aspect-square shadow-[0_2px_8px_rgba(0,0,0,0.08)]">
+<span class="text-3xl">😍</span>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<p class="text-text-subtle-light dark:text-text-subtle-dark text-sm font-medium leading-normal pb-3 pt-1 px-4 text-center hover:underline cursor-pointer">지난 기록 보기 →</p>
+</div>
+</main>
+</div>
+</div>
+</div>
+</div>
+
+</body></html>

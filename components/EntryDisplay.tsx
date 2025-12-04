@@ -1,7 +1,7 @@
 "use client";
 
 import EntryCard from "./EntryCard";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { getKSTDateStringDaysAgo } from "@/lib/utils";
 
 // 감정 값과 이모지 매핑
@@ -22,6 +22,8 @@ export default function EntryDisplay({
   entry,
   recentEntries,
 }: EntryDisplayProps) {
+  const router = useRouter();
+
   // 지난 1주일 날짜 배열 생성 (일~토, 한국 시간 기준)
   const getLastWeekDates = () => {
     const dates: Array<{ date: string; dayName: string; mood?: string }> = [];
@@ -57,9 +59,7 @@ export default function EntryDisplay({
         <EntryCard
           entry={entry}
           onDelete={() => {
-            if (typeof window !== "undefined") {
-              window.location.reload();
-            }
+            router.refresh(); // 서버 컴포넌트 캐시 무시하고 새로고침
           }}
         />
       </div>
@@ -106,14 +106,16 @@ export default function EntryDisplay({
         </div>
       </div>
       <div className="mt-6 sm:mt-8">
-        <Link
-          href="/list"
-          className="text-text-subtle-light dark:text-text-subtle-dark text-xs sm:text-sm font-medium leading-normal pb-3 pt-1 px-2 sm:px-4 hover:underline cursor-pointer block text-right"
+        <button
+          onClick={() => {
+            router.push("/list");
+            router.refresh(); // 서버 컴포넌트 캐시 무시하고 새로고침
+          }}
+          className="text-text-subtle-light dark:text-text-subtle-dark text-xs sm:text-sm font-medium leading-normal pb-3 pt-1 px-2 sm:px-4 hover:underline cursor-pointer block text-right ml-auto"
         >
           지난 기록 보기 →
-        </Link>
+        </button>
       </div>
     </>
   );
 }
-

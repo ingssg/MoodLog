@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MoodLog - New Entry</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#f97431",
+            "background-light": "#FFFAF7",
+            "background-dark": "#1a1a1a",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#333333] dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap px-10 py-5">
+<div class="flex items-center gap-4 text-[#181311] dark:text-white">
+<div class="size-6">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M24 4H6V17.3333V30.6667H24V44H42V30.6667V17.3333H24V4Z" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-xl font-bold tracking-[-0.015em]">MoodLog</h2>
+</div>
+<nav class="flex items-center gap-9 text-sm font-medium">
+<a class="text-primary dark:text-primary" href="#">Home</a>
+<a class="text-[#333333] dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">Settings</a>
+<a class="text-[#333333] dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">Profile</a>
+</nav>
+</header>
+<main class="flex flex-1 items-center justify-center px-4 py-10">
+<div class="flex w-full max-w-[680px] flex-col items-stretch justify-start rounded-xl bg-[#FFF3EC] dark:bg-[#2c2c2c] p-8 shadow-[0_16px_32px_rgba(0,0,0,0.1)] md:p-12">
+<h1 class="mb-8 text-center text-2xl font-bold text-[#333333] dark:text-white">How are you feeling today?</h1>
+<div class="mb-8 flex items-center justify-around">
+<div class="relative flex flex-col items-center gap-3">
+<button class="text-5xl transition-transform duration-200 hover:scale-110">😀</button>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<button class="text-5xl transition-transform duration-200 hover:scale-110">🙂</button>
+<div class="absolute -bottom-3 h-1.5 w-10 rounded-full bg-primary"></div>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<button class="text-5xl transition-transform duration-200 hover:scale-110">😢</button>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<button class="text-5xl transition-transform duration-200 hover:scale-110">😡</button>
+</div>
+<div class="relative flex flex-col items-center gap-3">
+<button class="text-5xl transition-transform duration-200 hover:scale-110">😍</button>
+</div>
+</div>
+<div class="mb-8 w-full">
+<label class="flex flex-col min-w-40 flex-1">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg border border-solid border-[#f1e3dd] bg-[#fff5f5] p-4 text-base font-normal leading-normal text-[#333333] placeholder:text-[#888888] focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/30 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400" placeholder="오늘의 하루를 한 줄로 기록해보세요…"/>
+</label>
+</div>
+<div class="mb-6 flex justify-center">
+<button class="flex min-w-[84px] w-full max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] shadow-[0_8px_16px_rgba(249,116,49,0.2)] transition-all hover:bg-opacity-90 active:scale-[0.98]">
+<span class="truncate">기록하기</span>
+</button>
+</div>
+<div class="flex items-center justify-center">
+<a class="cursor-pointer text-sm text-[#888888] dark:text-gray-400 hover:text-primary dark:hover:text-primary" href="#">
+<span class="truncate">지난 기록 보기 →</span>
+</a>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+</body></html>

@@ -140,7 +140,8 @@ export default function FilterableEntries({
 
     try {
       const response = await fetch(
-        `/api/entries?offset=${offset}&limit=7&mood=${mood}`
+        `/api/entries?offset=${offset}&limit=7&mood=${mood}`,
+        { cache: "no-store" } // 캐시 무시하고 최신 데이터 가져오기
       );
       const data = await response.json();
 
@@ -181,7 +182,8 @@ export default function FilterableEntries({
 
     try {
       const response = await fetch(
-        `/api/entries?offset=0&limit=7&mood=${mood}`
+        `/api/entries?offset=0&limit=7&mood=${mood}`,
+        { cache: "no-store" } // 캐시 무시하고 최신 데이터 가져오기
       );
       const data = await response.json();
 
