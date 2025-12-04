@@ -60,11 +60,13 @@ export default function FilterableEntries({
   const [hasMore, setHasMore] = useState(true); // 초기에는 항상 버튼 표시
   const [offset, setOffset] = useState(initialEntries.length);
   const [isClient, setIsClient] = useState(false); // 클라이언트 마운트 여부
+  const [isDemo, setIsDemo] = useState(false); // 데모 모드 여부
   const isInitialMount = useRef(true);
 
   // 클라이언트 마운트 확인 (하이드레이션 불일치 방지)
   useEffect(() => {
     setIsClient(true);
+    setIsDemo(isDemoMode());
   }, []);
 
   // 필터 변경 시 초기화 (초기 로드는 제외)
@@ -205,52 +207,56 @@ export default function FilterableEntries({
 
   return (
     <>
-      <PaperDiaryUpload
-        entries={displayedEntries}
-        onUploadComplete={() => {
-          // 업로드 완료 후 데이터 새로고침
-          if (isDemoMode()) {
-            const mood =
-              selectedFilter === "전체"
-                ? "all"
-                : emojiToMoodMap[selectedFilter];
-            const entries = getDemoEntriesFiltered(
-              mood,
-              0,
-              displayedEntries.length || 7
-            );
-            setDisplayedEntries(entries);
-          } else {
-            // API에서 다시 가져오기
-            const loadFilteredEntries = async () => {
+      {isClient && !isDemo && (
+        <PaperDiaryUpload
+          entries={displayedEntries}
+          onUploadComplete={() => {
+            // 업로드 완료 후 데이터 새로고침
+            if (isDemoMode()) {
               const mood =
                 selectedFilter === "전체"
                   ? "all"
                   : emojiToMoodMap[selectedFilter];
-              try {
-                const response = await fetch(
-                  `/api/entries?offset=0&limit=${
-                    displayedEntries.length || 7
-                  }&mood=${mood}`
-                );
-                const data = await response.json();
-                if (data.entries) {
-                  setDisplayedEntries(data.entries);
-                }
-              } catch (error) {}
-            };
-            loadFilteredEntries();
-          }
-        }}
-      />
+              const entries = getDemoEntriesFiltered(
+                mood,
+                0,
+                displayedEntries.length || 7
+              );
+              setDisplayedEntries(entries);
+            } else {
+              // API에서 다시 가져오기
+              const loadFilteredEntries = async () => {
+                const mood =
+                  selectedFilter === "전체"
+                    ? "all"
+                    : emojiToMoodMap[selectedFilter];
+                try {
+                  const response = await fetch(
+                    `/api/entries?offset=0&limit=${
+                      displayedEntries.length || 7
+                    }&mood=${mood}`
+                  );
+                  const data = await response.json();
+                  if (data.entries) {
+                    setDisplayedEntries(data.entries);
+                  }
+                } catch (error) {}
+              };
+              loadFilteredEntries();
+            }
+          }}
+        />
+      )}
       <div className="mb-4 sm:mb-6">
         {/* 데스크탑: 필터와 버튼이 같은 줄, 모바일: 필터만 표시 */}
         <div className="pb-3 border-b border-[#e6dedb] dark:border-white/10">
           <div className="hidden sm:flex justify-between items-center px-2 sm:px-4">
-            {/* 왼쪽 투명 스페이서 (버튼과 비슷한 너비) */}
-            {isClient && !isDemoMode() && (
-              <div className="w-[140px] sm:w-[160px]"></div>
-            )}
+            {/* 왼쪽 투명 스페이서 (버튼과 비슷한 너비) - 항상 렌더링하여 hydration 일치 */}
+            <div
+              className={`w-[140px] sm:w-[160px] ${
+                !isClient || isDemo ? "invisible" : ""
+              }`}
+            ></div>
             {/* 중앙 필터 - 항상 표시 */}
             <div className="flex justify-center gap-4 sm:gap-6 md:gap-8 overflow-x-auto flex-1">
               <FilterTab
@@ -284,25 +290,27 @@ export default function FilterableEntries({
                 onClick={() => setSelectedFilter("🥰")}
               />
             </div>
-            {/* 오른쪽 버튼 */}
-            {isClient && !isDemoMode() && (
-              <div className="w-[140px] sm:w-[160px] flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      const uploadButton = document.querySelector(
-                        "[data-paper-upload]"
-                      ) as HTMLButtonElement;
-                      uploadButton?.click();
-                    }
-                  }}
-                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white rounded-lg text-xs sm:text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow whitespace-nowrap"
-                >
-                  + 종이 일기 업로드
-                </button>
-              </div>
-            )}
+            {/* 오른쪽 버튼 - 항상 렌더링하여 hydration 일치 */}
+            <div
+              className={`w-[140px] sm:w-[160px] flex justify-end ${
+                !isClient || isDemo ? "invisible" : ""
+              }`}
+            >
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    const uploadButton = document.querySelector(
+                      "[data-paper-upload]"
+                    ) as HTMLButtonElement;
+                    uploadButton?.click();
+                  }
+                }}
+                className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white rounded-lg text-xs sm:text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow whitespace-nowrap"
+              >
+                + 종이 일기 업로드
+              </button>
+            </div>
           </div>
           {/* 모바일: 필터만 중앙 정렬 - 항상 표시 */}
           <div className="flex sm:hidden justify-center px-2 gap-4 overflow-x-auto">
@@ -338,25 +346,25 @@ export default function FilterableEntries({
             />
           </div>
         </div>
-        {/* 모바일: 버튼을 별도 줄에 전체 너비로 표시 */}
-        {isClient && !isDemoMode() && (
-          <div className="sm:hidden mt-3">
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  const uploadButton = document.querySelector(
-                    "[data-paper-upload]"
-                  ) as HTMLButtonElement;
-                  uploadButton?.click();
-                }
-              }}
-              className="w-full px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow"
-            >
-              + 종이 일기 업로드
-            </button>
-          </div>
-        )}
+        {/* 모바일: 버튼을 별도 줄에 전체 너비로 표시 - 항상 렌더링하여 hydration 일치 */}
+        <div
+          className={`sm:hidden mt-3 ${!isClient || isDemo ? "hidden" : ""}`}
+        >
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                const uploadButton = document.querySelector(
+                  "[data-paper-upload]"
+                ) as HTMLButtonElement;
+                uploadButton?.click();
+              }
+            }}
+            className="w-full px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow"
+          >
+            + 종이 일기 업로드
+          </button>
+        </div>
       </div>
       <div className="space-y-5 sm:space-y-7 md:space-y-8">
         {isInitialLoading ? (
