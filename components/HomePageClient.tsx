@@ -117,6 +117,7 @@ export default function HomePageClient({ searchParams }: HomePageClientProps) {
                 <EntryDisplay
                   entry={todayEntry}
                   recentEntries={recentEntries}
+                  weekDates={undefined}
                 />
               ) : (
                 <NoEntryForm />

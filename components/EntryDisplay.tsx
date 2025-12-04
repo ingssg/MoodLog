@@ -2,6 +2,7 @@
 
 import EntryCard from "./EntryCard";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { getKSTDateStringDaysAgo } from "@/lib/utils";
 
 // 감정 값과 이모지 매핑
@@ -16,39 +17,45 @@ const moodEmojiMap: Record<string, string> = {
 interface EntryDisplayProps {
   entry: any;
   recentEntries: any[];
+  weekDates?: Array<{ date: string; dayName: string }>;
 }
 
 export default function EntryDisplay({
   entry,
   recentEntries,
+  weekDates: serverWeekDates,
 }: EntryDisplayProps) {
   const router = useRouter();
 
-  // 지난 1주일 날짜 배열 생성 (일~토, 한국 시간 기준)
-  const getLastWeekDates = () => {
-    const dates: Array<{ date: string; dayName: string; mood?: string }> = [];
+  // 서버에서 전달받은 weekDates가 있으면 사용, 없으면 클라이언트에서 계산 (하위 호환성)
+  const weekDates = useMemo(() => {
+    if (serverWeekDates) {
+      // 서버에서 계산된 날짜에 감정 정보 추가
+      return serverWeekDates.map((dayData) => {
+        const entry = recentEntries?.find((e) => e.date === dayData.date);
+        return {
+          ...dayData,
+          mood: entry?.mood,
+        };
+      });
+    }
 
-    // 6일 전부터 오늘까지 (과거 -> 현재 순서, 왼쪽 -> 오른쪽)
+    // 클라이언트에서 계산 (하위 호환성)
+    const dates: Array<{ date: string; dayName: string; mood?: string }> = [];
     for (let i = 6; i >= 0; i--) {
       const dateStr = getKSTDateStringDaysAgo(i);
-      const date = new Date(dateStr + "T00:00:00+09:00"); // KST 기준으로 Date 객체 생성
+      const date = new Date(dateStr + "T00:00:00+09:00");
       const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
       const dayName = dayNames[date.getDay()];
-
-      // 해당 날짜의 일기가 있는지 확인
       const entry = recentEntries?.find((e) => e.date === dateStr);
-
       dates.push({
         date: dateStr,
         dayName,
         mood: entry?.mood,
       });
     }
-
     return dates;
-  };
-
-  const weekDates = getLastWeekDates();
+  }, [recentEntries, serverWeekDates]);
 
   return (
     <>

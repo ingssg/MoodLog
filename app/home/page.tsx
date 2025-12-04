@@ -74,6 +74,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     .lte("date", today)
     .order("date", { ascending: true });
 
+  // 서버에서 지난 1주일 날짜 배열 미리 계산 (hydration 일치 보장)
+  const weekDates: Array<{ date: string; dayName: string }> = [];
+  for (let i = 6; i >= 0; i--) {
+    const dateStr = getKSTDateStringDaysAgo(i);
+    const date = new Date(dateStr + "T00:00:00+09:00");
+    const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
+    const dayName = dayNames[date.getDay()];
+    weekDates.push({ date: dateStr, dayName });
+  }
+
   return (
     <div className="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark text-text-main-light dark:text-text-main-dark group/design-root overflow-x-hidden">
       <div className="layout-container flex h-full grow flex-col">
@@ -85,6 +95,7 @@ export default async function HomePage({ searchParams }: HomePageProps) {
                 <EntryDisplay
                   entry={todayEntry}
                   recentEntries={recentEntries || []}
+                  weekDates={weekDates}
                 />
               ) : (
                 <NoEntryForm />
