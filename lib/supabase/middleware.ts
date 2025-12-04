@@ -38,12 +38,18 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 체험 모드 쿠키 확인
+  const demoModeCookie = request.cookies.get("moodlog_demo_mode");
+
   // Allow auth callback and auth routes without user
+  // 체험 모드일 때는 /home, /list 접근 허용
   if (
     !user &&
     !request.nextUrl.pathname.startsWith("/") &&
     request.nextUrl.pathname !== "/" &&
-    !request.nextUrl.pathname.startsWith("/auth")
+    !request.nextUrl.pathname.startsWith("/auth") &&
+    !request.nextUrl.pathname.startsWith("/api") &&
+    demoModeCookie?.value !== "true"
   ) {
     // no user, potentially respond by redirecting the user to the login page
     const url = request.nextUrl.clone();

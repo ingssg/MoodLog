@@ -2,6 +2,11 @@
 
 import { useState, useEffect, useRef } from "react";
 import EntryCard from "./EntryCard";
+import {
+  isDemoMode,
+  getDemoEntriesFiltered,
+  getDemoEntriesCount,
+} from "@/lib/localStorage";
 
 // 감정 값과 이모지 매핑
 const moodEmojiMap: Record<string, string> = {
@@ -68,6 +73,17 @@ export default function FilterableEntries({
       const mood =
         selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
 
+      // 체험 모드일 때는 로컬스토리지에서 읽기
+      if (isDemoMode()) {
+        const entries = getDemoEntriesFiltered(mood, 0, 7);
+        const totalCount = getDemoEntriesCount(mood);
+        setDisplayedEntries(entries);
+        setHasMore(entries.length < totalCount);
+        setOffset(entries.length);
+        setIsInitialLoading(false);
+        return;
+      }
+
       try {
         const response = await fetch(
           `/api/entries?offset=0&limit=7&mood=${mood}`
@@ -96,6 +112,24 @@ export default function FilterableEntries({
     setIsLoadingMore(true);
     const mood =
       selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
+
+    // 체험 모드일 때는 로컬스토리지에서 읽기
+    if (isDemoMode()) {
+      const entries = getDemoEntriesFiltered(mood, offset, 7);
+      const totalCount = getDemoEntriesCount(mood);
+      if (entries.length > 0) {
+        setDisplayedEntries((prev) => {
+          const newEntries = [...prev, ...entries];
+          setHasMore(newEntries.length < totalCount);
+          return newEntries;
+        });
+        setOffset((prev) => prev + entries.length);
+      } else {
+        setHasMore(false);
+      }
+      setIsLoadingMore(false);
+      return;
+    }
 
     try {
       const response = await fetch(

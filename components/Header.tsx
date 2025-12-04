@@ -5,6 +5,7 @@ import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
+import { disableDemoMode } from "@/lib/localStorage";
 
 interface HeaderProps {
   showNav?: boolean;
@@ -59,6 +60,10 @@ export default function Header({ showNav = false, currentPage }: HeaderProps) {
     const supabase = createClient();
     await supabase.auth.signOut();
     setIsDropdownOpen(false);
+    // 로그아웃 시 체험 모드 데이터도 삭제 (혼선 방지)
+    disableDemoMode();
+    // 쿠키도 삭제
+    document.cookie = "moodlog_demo_mode=; path=/; max-age=0";
     router.push("/");
     router.refresh();
   };

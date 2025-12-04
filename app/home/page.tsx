@@ -1,8 +1,10 @@
+import { cookies } from "next/headers";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import HomePageClient from "@/components/HomePageClient";
 import Header from "@/components/Header";
 import MoodForm from "@/components/MoodForm";
 import EntryCard from "@/components/EntryCard";
-import { createClient } from "@/lib/supabase/server";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 import { getKSTDateString, getKSTDateStringDaysAgo } from "@/lib/utils";
 
@@ -27,7 +29,16 @@ export default async function HomePage({ searchParams }: HomePageProps) {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 로그인 사용자가 있으면 체험 모드 쿠키가 있어도 무시하고 Supabase 데이터만 사용
   if (!user) {
+    const cookieStore = cookies();
+    const demoModeCookie = cookieStore.get("moodlog_demo_mode");
+    
+    // 체험 모드일 때만 클라이언트 컴포넌트로 위임
+    if (demoModeCookie?.value === "true") {
+      return <HomePageClient searchParams={searchParams} />;
+    }
+    
     redirect("/");
   }
   const isLoadingState = searchParams?.loading === "true";
@@ -107,8 +118,9 @@ function EntryDisplay({
   const getLastWeekDates = () => {
     const dates: Array<{ date: string; dayName: string; mood?: string }> = [];
 
+    // 6일 전부터 오늘까지 (과거 -> 현재 순서, 왼쪽 -> 오른쪽)
     for (let i = 6; i >= 0; i--) {
-      const dateStr = getKSTDateStringDaysAgo(6 - i);
+      const dateStr = getKSTDateStringDaysAgo(i);
       const date = new Date(dateStr + "T00:00:00+09:00"); // KST 기준으로 Date 객체 생성
       const dayNames = ["일", "월", "화", "수", "목", "금", "토"];
       const dayName = dayNames[date.getDay()];

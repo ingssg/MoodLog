@@ -94,6 +94,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.redirect(`${origin}/?error=auth_failed&message=no_user`);
     }
 
+    // 로그인 성공 시 체험 모드 쿠키 삭제 (서버 사이드에서는 쿠키만 삭제)
+    response.cookies.delete("moodlog_demo_mode");
+
     // console.log("Session exchange successful, redirecting to home");
     return response;
   } catch (err) {

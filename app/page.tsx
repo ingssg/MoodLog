@@ -1,5 +1,6 @@
 import Logo from "@/components/Logo";
 import GoogleLoginButton from "@/components/GoogleLoginButton";
+import DemoModeButton from "@/components/DemoModeButton";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
@@ -69,6 +70,7 @@ export default async function LandingPage({
                     </div>
                   )}
                   <GoogleLoginButton />
+                  <DemoModeButton />
                 </div>
                 <a
                   className="text-xs sm:text-sm font-medium text-text-secondary-light dark:text-text-secondary-dark underline decoration-dotted underline-offset-4 hover:text-primary transition-colors px-4"

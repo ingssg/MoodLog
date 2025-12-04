@@ -1,7 +1,9 @@
-import Header from "@/components/Header";
+import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import FilterableEntries from "@/components/FilterableEntries";
+import ListPageClient from "@/components/ListPageClient";
+import Header from "@/components/Header";
 
 export default async function ListPage() {
   const supabase = await createClient();
@@ -9,7 +11,16 @@ export default async function ListPage() {
     data: { user },
   } = await supabase.auth.getUser();
 
+  // 로그인 사용자가 있으면 체험 모드 쿠키가 있어도 무시하고 Supabase 데이터만 사용
   if (!user) {
+    const cookieStore = cookies();
+    const demoModeCookie = cookieStore.get("moodlog_demo_mode");
+    
+    // 체험 모드일 때만 클라이언트 컴포넌트로 위임
+    if (demoModeCookie?.value === "true") {
+      return <ListPageClient />;
+    }
+    
     redirect("/");
   }
 

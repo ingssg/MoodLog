@@ -3,6 +3,8 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import { isDemoMode, saveDemoEntry, getDemoEntries } from "@/lib/localStorage";
+import { getKSTDateString } from "@/lib/utils";
 
 export default function MoodForm() {
   const router = useRouter();
@@ -25,20 +27,41 @@ export default function MoodForm() {
       return;
     }
 
-    const formData = new FormData();
-    formData.append("mood", selectedMood);
-    formData.append("content", content);
-
     setIsSubmitting(true);
     router.push("/home?loading=true");
 
     try {
+      const formData = new FormData();
+      formData.append("mood", selectedMood);
+      formData.append("content", content);
+
       const response = await fetch("/api/entries", {
         method: "POST",
         body: formData,
       });
 
       if (response.ok) {
+        const data = await response.json();
+
+        // 체험 모드일 때는 로컬스토리지에 저장
+        if (isDemoMode()) {
+          const today = getKSTDateString();
+          // 같은 날짜의 일기가 있으면 업데이트, 없으면 새로 생성
+          const entries = getDemoEntries();
+          const existingEntry = entries.find((e) => e.date === today);
+          const entryId = existingEntry
+            ? existingEntry.id
+            : `demo_${today}_${Date.now()}`;
+
+          saveDemoEntry({
+            id: entryId,
+            date: today,
+            content: content.trim(),
+            mood: selectedMood,
+            ai_comment: data.aiComment || "",
+          });
+        }
+
         router.replace("/home");
         router.refresh();
       } else {
