@@ -31,15 +31,19 @@ moodLog/
 │   ├── Header.tsx            # 헤더 컴포넌트 (네비게이션 포함)
 │   ├── Logo.tsx              # 로고 컴포넌트
 │   ├── GoogleLoginButton.tsx # Google 로그인 버튼
+│   ├── DemoModeButton.tsx   # 체험 모드 버튼
 │   ├── MoodForm.tsx          # 감정 선택 및 일기 작성 폼
 │   ├── EntryCard.tsx         # 일기 카드 컴포넌트
-│   └── FilterableEntries.tsx  # 필터링 및 페이지네이션 컴포넌트
+│   ├── FilterableEntries.tsx # 필터링 및 페이지네이션 컴포넌트
+│   ├── HomePageClient.tsx   # 체험 모드 홈 페이지 클라이언트
+│   └── ListPageClient.tsx   # 체험 모드 리스트 페이지 클라이언트
 ├── lib/
 │   ├── supabase/             # Supabase 클라이언트 설정
 │   │   ├── client.ts         # 브라우저 클라이언트
 │   │   ├── server.ts         # 서버 클라이언트
 │   │   └── middleware.ts     # 미들웨어 설정
 │   ├── openai.ts             # OpenAI API 연동
+│   ├── localStorage.ts       # 로컬스토리지 기반 체험 모드 데이터 관리
 │   └── utils.ts              # 유틸리티 함수 (한국 시간 기준 날짜 계산)
 ├── middleware.ts             # Next.js 미들웨어 (인증 처리)
 └── tailwind.config.ts        # Tailwind 설정
@@ -57,6 +61,7 @@ moodLog/
 - ✅ **지난 1주일간의 감정 흐름** - 홈 페이지에서 최근 7일간의 감정 변화 시각화
 - ✅ **한국 시간 기준 날짜 계산** - KST(UTC+9) 기준으로 정확한 날짜 처리
 - ✅ **반응형 디자인** - 모바일, 태블릿, 데스크톱 지원
+- ✅ **체험 모드** - 로그인 없이 로컬스토리지 기반으로 서비스 체험 가능
 
 ## 배포
 
