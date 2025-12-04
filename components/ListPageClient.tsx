@@ -3,7 +3,12 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/Header";
 import FilterableEntries from "@/components/FilterableEntries";
-import { isDemoMode, getDemoEntriesFiltered, type DemoEntry, disableDemoMode } from "@/lib/localStorage";
+import {
+  isDemoMode,
+  getDemoEntriesFiltered,
+  type DemoEntry,
+  disableDemoMode,
+} from "@/lib/localStorage";
 import { createClient } from "@/lib/supabase/client";
 
 export default function ListPageClient() {

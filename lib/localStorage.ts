@@ -9,6 +9,7 @@ export interface DemoEntry {
   content: string;
   mood: string;
   ai_comment?: string;
+  paper_diary_image?: string;
 }
 
 // 체험 모드 활성화 여부 확인 (클라이언트 사이드만)
