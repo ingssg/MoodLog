@@ -1,3 +1,8 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import { isDemoMode, deleteDemoEntry } from "@/lib/localStorage";
+
 // 감정 값과 이모지 매핑
 const moodEmojiMap: Record<string, string> = {
   happy: "😊",
@@ -28,13 +33,106 @@ interface Entry {
 interface EntryCardProps {
   entry: Entry;
   variant?: "default" | "compact";
+  onDelete?: () => void;
 }
 
 export default function EntryCard({
   entry,
   variant = "default",
+  onDelete,
 }: EntryCardProps) {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const isCompact = variant === "compact";
+
+  // 외부 클릭 시 드롭다운 닫기
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  const handleDelete = async () => {
+    if (!confirm("정말 이 일기를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      if (isDemoMode()) {
+        // 데모 모드: localStorage에서 삭제
+        deleteDemoEntry(entry.id);
+        onDelete?.();
+      } else {
+        // 로그인 모드: API로 삭제
+        const response = await fetch(`/api/entries/${entry.id}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          onDelete?.();
+        } else {
+          const error = await response.json();
+          alert(error.error || "일기 삭제에 실패했습니다.");
+        }
+      }
+    } catch (error) {
+      alert("일기 삭제 중 오류가 발생했습니다.");
+    } finally {
+      setIsDeleting(false);
+      setIsDropdownOpen(false);
+    }
+  };
+
+  // 감정 이모지와 삭제 버튼 컴포넌트
+  const MoodAndDeleteButton = () => (
+    <div className="flex items-center justify-end gap-2 sm:gap-3">
+      <p
+        className={`${
+          isCompact ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl"
+        }`}
+      >
+        {moodEmojiMap[entry.mood] || "😀"}
+      </p>
+      <div className="relative" ref={dropdownRef}>
+        <button
+          type="button"
+          onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+          className="text-text-secondary-light dark:text-text-secondary-dark hover:text-primary transition-colors p-1"
+          disabled={isDeleting}
+        >
+          <span className="text-lg sm:text-xl">︙</span>
+        </button>
+        {isDropdownOpen && (
+          <div className="absolute right-0 top-8 z-10 bg-white dark:bg-card-dark rounded-[12px] shadow-lg border border-gray-200 dark:border-gray-700 min-w-[120px]">
+            <button
+              type="button"
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="w-full px-4 py-2 text-left text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-[12px] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isDeleting ? "삭제 중..." : "삭제하기"}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div
@@ -46,43 +144,36 @@ export default function EntryCard({
           : "shadow-[0_10px_28px_rgba(180,140,120,0.28),0_5px_10px_rgba(180,140,120,0.22)]"
       }`}
     >
-      <div className="flex items-start justify-between gap-3 sm:gap-6">
-        <div className="flex flex-col items-stretch justify-center gap-3 sm:gap-4 w-full min-w-0">
+      <div className="flex flex-col gap-3 sm:gap-4">
+        <div className="flex items-center justify-between gap-3 sm:gap-6">
           <p className="text-text-secondary-light dark:text-text-secondary-dark text-xs sm:text-sm font-normal leading-normal">
             {formatDate(entry.date)}
           </p>
-          <p className="text-[#5A483A] dark:text-text-primary-dark text-sm sm:text-base md:text-lg font-bold leading-tight tracking-[-0.015em] break-words">
-            {entry.content}
-          </p>
-          {entry.ai_comment && (
-            <>
-              <hr className="border-t-border-light dark:border-white/10 my-2" />
-              <p className="text-[#B5542A] dark:text-primary/70 text-[11px] sm:text-xs md:text-sm font-normal leading-relaxed break-words border-l-2 border-primary/40 pl-3 sm:pl-4">
-                {entry.ai_comment}
-              </p>
-            </>
-          )}
-          {entry.paper_diary_image && (
-            <>
-              <hr className="border-t-border-light dark:border-white/10 my-2" />
-              <div className="mt-2">
-                <img
-                  src={entry.paper_diary_image}
-                  alt="종이 일기"
-                  className="w-full h-auto rounded-lg object-contain max-h-[400px] sm:max-h-[500px] md:max-h-[600px] shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
-                  loading="lazy"
-                />
-              </div>
-            </>
-          )}
+          <MoodAndDeleteButton />
         </div>
-        <p
-          className={`${
-            isCompact ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl"
-          } flex-shrink-0`}
-        >
-          {moodEmojiMap[entry.mood] || "😀"}
+        <p className="text-[#5A483A] dark:text-text-primary-dark text-sm sm:text-base md:text-lg font-bold leading-tight tracking-[-0.015em] break-words">
+          {entry.content}
         </p>
+        {(entry.ai_comment || entry.paper_diary_image) && (
+          <>
+            <hr className="border-t-border-light dark:border-white/10 my-2" />
+          </>
+        )}
+        {entry.ai_comment && (
+          <p className="text-[#B5542A] dark:text-primary/70 text-[11px] sm:text-xs md:text-sm font-normal leading-relaxed break-words border-l-2 border-primary/40 pl-3 sm:pl-4">
+            {entry.ai_comment}
+          </p>
+        )}
+        {entry.paper_diary_image && (
+          <div className="mt-2">
+            <img
+              src={entry.paper_diary_image}
+              alt="종이 일기"
+              className="w-full h-auto rounded-lg object-contain max-h-[400px] sm:max-h-[500px] md:max-h-[600px] shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+              loading="lazy"
+            />
+          </div>
+        )}
       </div>
     </div>
   );
