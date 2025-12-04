@@ -25,6 +25,7 @@ moodLog/
 │   │   └── callback/         # OAuth 콜백
 │   └── api/
 │       ├── entries/          # 일기 API (GET, POST)
+│       ├── paper-diary/       # 종이 일기 업로드 API (POST)
 │       └── auth/
 │           └── logout/       # 로그아웃 API
 ├── components/
@@ -35,6 +36,7 @@ moodLog/
 │   ├── MoodForm.tsx          # 감정 선택 및 일기 작성 폼
 │   ├── EntryCard.tsx         # 일기 카드 컴포넌트
 │   ├── FilterableEntries.tsx # 필터링 및 페이지네이션 컴포넌트
+│   ├── PaperDiaryUpload.tsx  # 종이 일기 업로드 컴포넌트
 │   ├── HomePageClient.tsx   # 체험 모드 홈 페이지 클라이언트
 │   └── ListPageClient.tsx   # 체험 모드 리스트 페이지 클라이언트
 ├── lib/
@@ -59,6 +61,7 @@ moodLog/
 - ✅ **감정별 필터링** - 전체/행복/보통/슬픔/화남/사랑으로 일기 필터링
 - ✅ **페이지네이션** - 일기 목록을 7개씩 로드하고 "더 보기"로 추가 로드
 - ✅ **지난 1주일간의 감정 흐름** - 홈 페이지에서 최근 7일간의 감정 변화 시각화
+- ✅ **종이 일기 업로드** - 날짜 선택, 감정 선택, 이미지 미리보기 및 업로드 기능
 - ✅ **한국 시간 기준 날짜 계산** - KST(UTC+9) 기준으로 정확한 날짜 처리
 - ✅ **반응형 디자인** - 모바일, 태블릿, 데스크톱 지원
 - ✅ **체험 모드** - 로그인 없이 로컬스토리지 기반으로 서비스 체험 가능
