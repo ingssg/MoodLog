@@ -22,6 +22,7 @@ interface Entry {
   content: string;
   mood: string;
   ai_comment?: string;
+  paper_diary_image?: string;
 }
 
 interface EntryCardProps {
@@ -59,6 +60,19 @@ export default function EntryCard({
               <p className="text-[#B5542A] dark:text-primary/70 text-[11px] sm:text-xs md:text-sm font-normal leading-relaxed break-words border-l-2 border-primary/40 pl-3 sm:pl-4">
                 {entry.ai_comment}
               </p>
+            </>
+          )}
+          {entry.paper_diary_image && (
+            <>
+              <hr className="border-t-border-light dark:border-white/10 my-2" />
+              <div className="mt-2">
+                <img
+                  src={entry.paper_diary_image}
+                  alt="종이 일기"
+                  className="w-full h-auto rounded-lg object-contain max-h-[400px] sm:max-h-[500px] md:max-h-[600px] shadow-[0_4px_8px_rgba(0,0,0,0.1)]"
+                  loading="lazy"
+                />
+              </div>
             </>
           )}
         </div>
