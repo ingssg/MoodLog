@@ -59,7 +59,13 @@ export default function FilterableEntries({
   const [isLoadingMore, setIsLoadingMore] = useState(false); // 더보기 버튼 클릭 시 로딩
   const [hasMore, setHasMore] = useState(true); // 초기에는 항상 버튼 표시
   const [offset, setOffset] = useState(initialEntries.length);
+  const [isClient, setIsClient] = useState(false); // 클라이언트 마운트 여부
   const isInitialMount = useRef(true);
+
+  // 클라이언트 마운트 확인 (하이드레이션 불일치 방지)
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // 필터 변경 시 초기화 (초기 로드는 제외)
   useEffect(() => {
@@ -153,6 +159,8 @@ export default function FilterableEntries({
   };
 
   const handleDelete = useCallback(async () => {
+    if (!isClient) return; // 클라이언트에서만 실행
+
     // 삭제 후 리스트 새로고침
     const mood =
       selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
@@ -191,7 +199,7 @@ export default function FilterableEntries({
     } finally {
       setIsInitialLoading(false);
     }
-  }, [selectedFilter]);
+  }, [selectedFilter, isClient]);
 
   return (
     <>
@@ -236,61 +244,65 @@ export default function FilterableEntries({
       <div className="mb-4 sm:mb-6">
         {/* 데스크탑: 필터와 버튼이 같은 줄, 모바일: 필터만 표시 */}
         <div className="pb-3 border-b border-[#e6dedb] dark:border-white/10">
-          {!isDemoMode() ? (
-            <div className="hidden sm:flex justify-between items-center px-2 sm:px-4">
-              {/* 왼쪽 투명 스페이서 (버튼과 비슷한 너비) */}
+          <div className="hidden sm:flex justify-between items-center px-2 sm:px-4">
+            {/* 왼쪽 투명 스페이서 (버튼과 비슷한 너비) */}
+            {isClient && !isDemoMode() && (
               <div className="w-[140px] sm:w-[160px]"></div>
-              {/* 중앙 필터 */}
-              <div className="flex justify-center gap-4 sm:gap-6 md:gap-8 overflow-x-auto flex-1">
-                <FilterTab
-                  label="전체"
-                  active={selectedFilter === "전체"}
-                  onClick={() => setSelectedFilter("전체")}
-                />
-                <FilterTab
-                  label="😊"
-                  active={selectedFilter === "😊"}
-                  onClick={() => setSelectedFilter("😊")}
-                />
-                <FilterTab
-                  label="🙂"
-                  active={selectedFilter === "🙂"}
-                  onClick={() => setSelectedFilter("🙂")}
-                />
-                <FilterTab
-                  label="😢"
-                  active={selectedFilter === "😢"}
-                  onClick={() => setSelectedFilter("😢")}
-                />
-                <FilterTab
-                  label="😡"
-                  active={selectedFilter === "😡"}
-                  onClick={() => setSelectedFilter("😡")}
-                />
-                <FilterTab
-                  label="🥰"
-                  active={selectedFilter === "🥰"}
-                  onClick={() => setSelectedFilter("🥰")}
-                />
-              </div>
-              {/* 오른쪽 버튼 */}
+            )}
+            {/* 중앙 필터 - 항상 표시 */}
+            <div className="flex justify-center gap-4 sm:gap-6 md:gap-8 overflow-x-auto flex-1">
+              <FilterTab
+                label="전체"
+                active={selectedFilter === "전체"}
+                onClick={() => setSelectedFilter("전체")}
+              />
+              <FilterTab
+                label="😊"
+                active={selectedFilter === "😊"}
+                onClick={() => setSelectedFilter("😊")}
+              />
+              <FilterTab
+                label="🙂"
+                active={selectedFilter === "🙂"}
+                onClick={() => setSelectedFilter("🙂")}
+              />
+              <FilterTab
+                label="😢"
+                active={selectedFilter === "😢"}
+                onClick={() => setSelectedFilter("😢")}
+              />
+              <FilterTab
+                label="😡"
+                active={selectedFilter === "😡"}
+                onClick={() => setSelectedFilter("😡")}
+              />
+              <FilterTab
+                label="🥰"
+                active={selectedFilter === "🥰"}
+                onClick={() => setSelectedFilter("🥰")}
+              />
+            </div>
+            {/* 오른쪽 버튼 */}
+            {isClient && !isDemoMode() && (
               <div className="w-[140px] sm:w-[160px] flex justify-end">
                 <button
                   type="button"
                   onClick={() => {
-                    const uploadButton = document.querySelector(
-                      "[data-paper-upload]"
-                    ) as HTMLButtonElement;
-                    uploadButton?.click();
+                    if (typeof window !== "undefined") {
+                      const uploadButton = document.querySelector(
+                        "[data-paper-upload]"
+                      ) as HTMLButtonElement;
+                      uploadButton?.click();
+                    }
                   }}
                   className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white rounded-lg text-xs sm:text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow whitespace-nowrap"
                 >
                   + 종이 일기 업로드
                 </button>
               </div>
-            </div>
-          ) : null}
-          {/* 모바일: 필터만 중앙 정렬 */}
+            )}
+          </div>
+          {/* 모바일: 필터만 중앙 정렬 - 항상 표시 */}
           <div className="flex sm:hidden justify-center px-2 gap-4 overflow-x-auto">
             <FilterTab
               label="전체"
@@ -325,15 +337,17 @@ export default function FilterableEntries({
           </div>
         </div>
         {/* 모바일: 버튼을 별도 줄에 전체 너비로 표시 */}
-        {!isDemoMode() && (
+        {isClient && !isDemoMode() && (
           <div className="sm:hidden mt-3">
             <button
               type="button"
               onClick={() => {
-                const uploadButton = document.querySelector(
-                  "[data-paper-upload]"
-                ) as HTMLButtonElement;
-                uploadButton?.click();
+                if (typeof window !== "undefined") {
+                  const uploadButton = document.querySelector(
+                    "[data-paper-upload]"
+                  ) as HTMLButtonElement;
+                  uploadButton?.click();
+                }
               }}
               className="w-full px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow"
             >
