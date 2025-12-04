@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import EntryCard from "./EntryCard";
+import PaperDiaryUpload from "./PaperDiaryUpload";
 import {
   isDemoMode,
   getDemoEntriesFiltered,
@@ -41,6 +42,7 @@ interface Entry {
   content: string;
   mood: string;
   ai_comment?: string;
+  paper_diary_image?: string;
 }
 
 interface FilterableEntriesProps {
@@ -99,7 +101,6 @@ export default function FilterableEntries({
           setHasMore(false);
         }
       } catch (error) {
-        // console.error("Error loading entries:", error);
       } finally {
         setIsInitialLoading(false);
       }
@@ -145,7 +146,6 @@ export default function FilterableEntries({
         setHasMore(false);
       }
     } catch (error) {
-      // console.error("Error loading more entries:", error);
       setHasMore(false);
     } finally {
       setIsLoadingMore(false);
@@ -154,39 +154,153 @@ export default function FilterableEntries({
 
   return (
     <>
-      <div className="pb-3 mb-4 sm:mb-6">
-        <div className="flex justify-center border-b border-[#e6dedb] dark:border-white/10 px-2 sm:px-4 gap-4 sm:gap-6 md:gap-8 overflow-x-auto">
-          <FilterTab
-            label="전체"
-            active={selectedFilter === "전체"}
-            onClick={() => setSelectedFilter("전체")}
-          />
-          <FilterTab
-            label="😊"
-            active={selectedFilter === "😊"}
-            onClick={() => setSelectedFilter("😊")}
-          />
-          <FilterTab
-            label="🙂"
-            active={selectedFilter === "🙂"}
-            onClick={() => setSelectedFilter("🙂")}
-          />
-          <FilterTab
-            label="😢"
-            active={selectedFilter === "😢"}
-            onClick={() => setSelectedFilter("😢")}
-          />
-          <FilterTab
-            label="😡"
-            active={selectedFilter === "😡"}
-            onClick={() => setSelectedFilter("😡")}
-          />
-          <FilterTab
-            label="🥰"
-            active={selectedFilter === "🥰"}
-            onClick={() => setSelectedFilter("🥰")}
-          />
+      <PaperDiaryUpload
+        entries={displayedEntries}
+        onUploadComplete={() => {
+          // 업로드 완료 후 데이터 새로고침
+          if (isDemoMode()) {
+            const mood =
+              selectedFilter === "전체"
+                ? "all"
+                : emojiToMoodMap[selectedFilter];
+            const entries = getDemoEntriesFiltered(
+              mood,
+              0,
+              displayedEntries.length || 7
+            );
+            setDisplayedEntries(entries);
+          } else {
+            // API에서 다시 가져오기
+            const loadFilteredEntries = async () => {
+              const mood =
+                selectedFilter === "전체"
+                  ? "all"
+                  : emojiToMoodMap[selectedFilter];
+              try {
+                const response = await fetch(
+                  `/api/entries?offset=0&limit=${
+                    displayedEntries.length || 7
+                  }&mood=${mood}`
+                );
+                const data = await response.json();
+                if (data.entries) {
+                  setDisplayedEntries(data.entries);
+                }
+              } catch (error) {
+              }
+            };
+            loadFilteredEntries();
+          }
+        }}
+      />
+      <div className="mb-4 sm:mb-6">
+        {/* 데스크탑: 필터와 버튼이 같은 줄, 모바일: 필터만 표시 */}
+        <div className="pb-3 border-b border-[#e6dedb] dark:border-white/10">
+          {!isDemoMode() ? (
+            <div className="hidden sm:flex justify-between items-center px-2 sm:px-4">
+              {/* 왼쪽 투명 스페이서 (버튼과 비슷한 너비) */}
+              <div className="w-[140px] sm:w-[160px]"></div>
+              {/* 중앙 필터 */}
+              <div className="flex justify-center gap-4 sm:gap-6 md:gap-8 overflow-x-auto flex-1">
+                <FilterTab
+                  label="전체"
+                  active={selectedFilter === "전체"}
+                  onClick={() => setSelectedFilter("전체")}
+                />
+                <FilterTab
+                  label="😊"
+                  active={selectedFilter === "😊"}
+                  onClick={() => setSelectedFilter("😊")}
+                />
+                <FilterTab
+                  label="🙂"
+                  active={selectedFilter === "🙂"}
+                  onClick={() => setSelectedFilter("🙂")}
+                />
+                <FilterTab
+                  label="😢"
+                  active={selectedFilter === "😢"}
+                  onClick={() => setSelectedFilter("😢")}
+                />
+                <FilterTab
+                  label="😡"
+                  active={selectedFilter === "😡"}
+                  onClick={() => setSelectedFilter("😡")}
+                />
+                <FilterTab
+                  label="🥰"
+                  active={selectedFilter === "🥰"}
+                  onClick={() => setSelectedFilter("🥰")}
+                />
+              </div>
+              {/* 오른쪽 버튼 */}
+              <div className="w-[140px] sm:w-[160px] flex justify-end">
+                <button
+                  type="button"
+                  onClick={() => {
+                    const uploadButton = document.querySelector(
+                      "[data-paper-upload]"
+                    ) as HTMLButtonElement;
+                    uploadButton?.click();
+                  }}
+                  className="px-3 sm:px-4 py-1.5 sm:py-2 bg-primary text-white rounded-lg text-xs sm:text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow whitespace-nowrap"
+                >
+                  + 종이 일기 업로드
+                </button>
+              </div>
+            </div>
+          ) : null}
+          {/* 모바일: 필터만 중앙 정렬 */}
+          <div className="flex sm:hidden justify-center px-2 gap-4 overflow-x-auto">
+            <FilterTab
+              label="전체"
+              active={selectedFilter === "전체"}
+              onClick={() => setSelectedFilter("전체")}
+            />
+            <FilterTab
+              label="😊"
+              active={selectedFilter === "😊"}
+              onClick={() => setSelectedFilter("😊")}
+            />
+            <FilterTab
+              label="🙂"
+              active={selectedFilter === "🙂"}
+              onClick={() => setSelectedFilter("🙂")}
+            />
+            <FilterTab
+              label="😢"
+              active={selectedFilter === "😢"}
+              onClick={() => setSelectedFilter("😢")}
+            />
+            <FilterTab
+              label="😡"
+              active={selectedFilter === "😡"}
+              onClick={() => setSelectedFilter("😡")}
+            />
+            <FilterTab
+              label="🥰"
+              active={selectedFilter === "🥰"}
+              onClick={() => setSelectedFilter("🥰")}
+            />
+          </div>
         </div>
+        {/* 모바일: 버튼을 별도 줄에 전체 너비로 표시 */}
+        {!isDemoMode() && (
+          <div className="sm:hidden mt-3">
+            <button
+              type="button"
+              onClick={() => {
+                const uploadButton = document.querySelector(
+                  "[data-paper-upload]"
+                ) as HTMLButtonElement;
+                uploadButton?.click();
+              }}
+              className="w-full px-4 py-2.5 bg-primary text-white rounded-lg text-sm font-semibold shadow-[0_2px_4px_rgba(249,116,49,0.2)] hover:shadow-[0_4px_8px_rgba(249,116,49,0.3)] transition-shadow"
+            >
+              + 종이 일기 업로드
+            </button>
+          </div>
+        )}
       </div>
       <div className="space-y-5 sm:space-y-7 md:space-y-8">
         {isInitialLoading ? (
