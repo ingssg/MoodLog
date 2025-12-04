@@ -1,8 +1,8 @@
 import { cookies } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
-import FilterableEntries from "@/components/FilterableEntries";
 import ListPageClient from "@/components/ListPageClient";
+import ListPageAuthenticated from "@/components/ListPageAuthenticated";
 import Header from "@/components/Header";
 
 export default async function ListPage() {
@@ -15,12 +15,12 @@ export default async function ListPage() {
   if (!user) {
     const cookieStore = cookies();
     const demoModeCookie = cookieStore.get("moodlog_demo_mode");
-    
+
     // 체험 모드일 때만 클라이언트 컴포넌트로 위임
     if (demoModeCookie?.value === "true") {
       return <ListPageClient />;
     }
-    
+
     redirect("/");
   }
 
@@ -36,18 +36,5 @@ export default async function ListPage() {
     // console.error("Error fetching entries:", error);
   }
 
-  return (
-    <div className="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden bg-background-light dark:bg-background-dark">
-      <div className="layout-container flex h-full grow flex-col">
-        <div className="px-4 sm:px-8 flex flex-1 justify-center py-5">
-          <div className="layout-content-container flex flex-col w-full max-w-4xl flex-1">
-            <Header showNav currentPage="list" />
-            <main className="flex flex-col flex-1 py-4 sm:py-8 md:py-12 px-2 sm:px-4">
-              <FilterableEntries entries={entries || []} />
-            </main>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  return <ListPageAuthenticated initialEntries={entries || []} />;
 }
