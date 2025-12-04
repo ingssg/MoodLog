@@ -90,3 +90,11 @@ export function getDemoEntriesCount(mood?: string): number {
   }
   return entries.length;
 }
+
+// 체험 모드 일기 삭제
+export function deleteDemoEntry(entryId: string): void {
+  if (typeof window === "undefined") return;
+  const entries = getDemoEntries();
+  const filtered = entries.filter((e) => e.id !== entryId);
+  localStorage.setItem(DEMO_ENTRIES_KEY, JSON.stringify(filtered));
+}
