@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import EntryCard from "./EntryCard";
 import PaperDiaryUpload from "./PaperDiaryUpload";
 import {
@@ -152,7 +152,7 @@ export default function FilterableEntries({
     }
   };
 
-  const handleDelete = async () => {
+  const handleDelete = useCallback(async () => {
     // 삭제 후 리스트 새로고침
     const mood =
       selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
@@ -191,7 +191,7 @@ export default function FilterableEntries({
     } finally {
       setIsInitialLoading(false);
     }
-  };
+  }, [selectedFilter]);
 
   return (
     <>

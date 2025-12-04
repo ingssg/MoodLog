@@ -67,7 +67,9 @@ export default function EntryCard({
   }, [isDropdownOpen]);
 
   const handleDelete = async () => {
-    if (!confirm("정말 이 일기를 삭제하시겠습니까?")) {
+    if (typeof window === "undefined") return;
+
+    if (!window.confirm("정말 이 일기를 삭제하시겠습니까?")) {
       return;
     }
 
@@ -77,7 +79,11 @@ export default function EntryCard({
       if (isDemoMode()) {
         // 데모 모드: localStorage에서 삭제
         deleteDemoEntry(entry.id);
-        onDelete?.();
+        if (onDelete) {
+          onDelete();
+        } else {
+          window.location.reload();
+        }
       } else {
         // 로그인 모드: API로 삭제
         const response = await fetch(`/api/entries/${entry.id}`, {
@@ -85,14 +91,20 @@ export default function EntryCard({
         });
 
         if (response.ok) {
-          onDelete?.();
+          if (onDelete) {
+            onDelete();
+          } else {
+            window.location.reload();
+          }
         } else {
           const error = await response.json();
-          alert(error.error || "일기 삭제에 실패했습니다.");
+          window.alert(error.error || "일기 삭제에 실패했습니다.");
         }
       }
     } catch (error) {
-      alert("일기 삭제 중 오류가 발생했습니다.");
+      if (typeof window !== "undefined") {
+        window.alert("일기 삭제 중 오류가 발생했습니다.");
+      }
     } finally {
       setIsDeleting(false);
       setIsDropdownOpen(false);

@@ -57,7 +57,9 @@ export default function EntryDisplay({
         <EntryCard
           entry={entry}
           onDelete={() => {
-            window.location.reload();
+            if (typeof window !== "undefined") {
+              window.location.reload();
+            }
           }}
         />
       </div>
