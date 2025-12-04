@@ -152,6 +152,47 @@ export default function FilterableEntries({
     }
   };
 
+  const handleDelete = async () => {
+    // 삭제 후 리스트 새로고침
+    const mood =
+      selectedFilter === "전체" ? "all" : emojiToMoodMap[selectedFilter];
+
+    setIsInitialLoading(true);
+    setDisplayedEntries([]);
+
+    // 체험 모드일 때는 로컬스토리지에서 읽기
+    if (isDemoMode()) {
+      const entries = getDemoEntriesFiltered(mood, 0, 7);
+      const totalCount = getDemoEntriesCount(mood);
+      setDisplayedEntries(entries);
+      setHasMore(entries.length < totalCount);
+      setOffset(entries.length);
+      setIsInitialLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `/api/entries?offset=0&limit=7&mood=${mood}`
+      );
+      const data = await response.json();
+
+      if (data.entries) {
+        setDisplayedEntries(data.entries);
+        setHasMore(data.entries.length === 7);
+        setOffset(data.entries.length);
+      } else {
+        setDisplayedEntries([]);
+        setHasMore(false);
+        setOffset(0);
+      }
+    } catch (error) {
+      // console.error("Error refreshing entries:", error);
+    } finally {
+      setIsInitialLoading(false);
+    }
+  };
+
   return (
     <>
       <PaperDiaryUpload
@@ -186,8 +227,7 @@ export default function FilterableEntries({
                 if (data.entries) {
                   setDisplayedEntries(data.entries);
                 }
-              } catch (error) {
-              }
+              } catch (error) {}
             };
             loadFilteredEntries();
           }
@@ -309,7 +349,12 @@ export default function FilterableEntries({
           </div>
         ) : displayedEntries && displayedEntries.length > 0 ? (
           displayedEntries.map((entry) => (
-            <EntryCard key={entry.id} entry={entry} variant="compact" />
+            <EntryCard
+              key={entry.id}
+              entry={entry}
+              variant="compact"
+              onDelete={handleDelete}
+            />
           ))
         ) : (
           <div className="text-center py-8 sm:py-12">
